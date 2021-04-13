@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>達達股票-首頁</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    </link>
+    <link rel="stylesheet" href="css/index.css">
+    </link>
+    <script src="js/jquery-3.5.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="header justify-content-center">
+        <div class="row">
+            <div class="col col-md-2 headerfix">
+            </div>
+            <div class="col navbar">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand" href="#">
+                        <img src="images/logo_small.png" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="fix">
+                        </div>
+                        <div class="navbar-nav">
+                            <a class="nav-item nav-link active" href="#">
+                                MikeChen,你好
+                            </a>
+                            <a class="nav-item nav-link active" href="#">登入</a>
+                            <a class="nav-item nav-link" href="#">登出</a>
+                            <a class="nav-item nav-link" href="#">註冊</a>
+                            <a class="nav-item nav-link" href="#">個人資訊</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid content">
+        <div class="row">
+            <div class="col col-md-5"></div>
+            <div class="col col-md-2"></div>
+            <div class="col col-md-5" style="padding:15px;">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="stockno" aria-label="stockno" aria-describedby="basic-addon1">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Search</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="chartContainer" id="chartContainer"></div>
+            </div>
+            <div class="col stockInformation">
+                <h2>
+                    HotStock: 台GG
+                </h2>
+                <p><strong>民國七十六年，</strong></p>
+                <p><strong>台積</strong>公司成立於台灣新竹科學園區，</p>
+                <p>並開創了專業積體電路製造服務商業模式。</p>
+                <p>&nbsp;<strong>台積</strong>公司專注生產由客戶所設計的晶片，</p>
+                <p>本身並不設計、</p>
+                <p>生產或銷售自有品牌產品，</p>
+                <p>確保不與客戶直接競爭。</p>
+                <img src="https://upload.wikimedia.org/wikipedia/zh/thumb/f/fd/TSMC.svg/1200px-TSMC.svg.png" alt="" style="height:30%">
+            </div>
+        </div>
+        <div class="row" style="margin-top:20px;">
+            <div class="news" style="overflow: hidden;">
+                <h2>
+                    財經新聞
+                </h2>
+                <div class="row" style="width:100%;margin:0">
+                    <div class="snews">
+                        <a href="https://tw.news.yahoo.com/%E5%8F%B0%E7%A9%8D%E9%9B%BBadr%E9%87%8D%E6%8C%AB%E8%BF%916-%E8%B7%8C%E5%B9%85%E5%A4%A7%E9%81%8E%E8%B2%BB%E5%8D%8A-%E7%BE%8E%E8%82%A1%E6%8B%8B%E5%94%AE%E6%BD%AE%E6%81%90%E7%B9%BC%E7%BA%8C%E6%8B%96%E7%B4%AF%E5%8F%B0%E8%82%A1-%E8%8B%A5%E7%84%A1%E6%B3%95%E6%94%B6%E5%BE%A9-%E9%80%99%E9%BB%9E%E4%BD%8D-081912806.html">
+                            台積電ADR重挫近6％、跌幅大過費半…美股拋售潮恐繼續拖累台股？若無法收復「這點位」投資人就得當心
+                        </a>
+                    </div>
+                    <div class="snews">
+                        <a href="https://tw.news.yahoo.com/%E5%B7%A5%E7%A8%8B%E5%B8%AB%E8%B2%B7%E8%82%A1%E6%85%98%E8%B3%A0%E6%95%B8%E5%8D%81%E8%90%AC-%E4%BB%96%E5%88%97-%E8%82%A1%E5%B8%82%E8%8F%9C%E9%B3%A5-%E4%B8%89%E5%A4%A7%E7%A6%81%E5%BF%8C-090900096.html">
+                            工程師買股慘賠數十萬 他列「股市菜鳥」三大禁忌
+                        </a>
+                    </div>
+                    <div class="snews">
+                    	<a href="https://tw.news.yahoo.com/%E5%8F%B0%E7%A9%8D%E9%9B%BB%E7%AB%99%E5%9B%9E600%E5%85%83%E6%94%B6%E6%96%82%E8%B7%8C%E5%B9%85-%E5%8F%B0%E8%82%A1%E9%80%B1%E7%B7%9A%E6%94%B6%E9%BB%91-%E5%9C%96-075847421.html">
+                    		台積電站回600元收斂跌幅 台股週線收黑 (圖)
+                    	</a>
+                    </div>
+                    <div class="snews">
+                    	<a href="https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%AB%98%E6%AA%94%E9%9C%87%E7%9B%AA-%E5%83%B9%E5%80%BC%E5%9E%8B%E6%8A%95%E8%B3%87%E6%9B%B4%E9%A1%AF%E5%83%B9%E5%80%BC-075742839.html">
+                    		台股高檔震盪 價值型投資更顯價值
+                    	</a>
+                    </div>
+                </div>
+            </div>
+            <div class="otherChartContainer" id="otherChartContainer">
+
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="row" style="padding:15px">
+            <div class="col col-md-3 fix">
+            </div>
+            <div class="col col-md-2">
+                <img src="images/logo_small.png" alt="">
+            </div>
+            <div class="col col-md-3">
+                <div class="row" style="padding:35px">
+                    <div class="col col-md-3">
+                        <a href="#" style="text-decoration:none;color:black;">
+                            關於我們
+                        </a>
+                    </div>
+                    <div class="col col-md-1">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="col col-md-3">
+                        <a href="#" style="text-decoration:none;color:black;">
+                            聯繫我們
+                        </a>
+                    </div>
+                    <div class="col col-md-1">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="col col-md-3">
+                        <a href="">
+                            <img src="images/tedu_logo.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/candleStick.js"></script>
+    <script src="js/linechart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <script>
+    	window.onload = function(){
+    		candleStick();
+    		lineChart();
+    	}
+    </script>
+</body>
+
+</html>

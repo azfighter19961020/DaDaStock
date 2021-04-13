@@ -1,0 +1,100 @@
+#app{
+	font-family: Microsoft YaHei;
+}
+
+.header{
+	width:100%;
+	height:110px;
+	background-color:#FFFFFF;
+}
+.footer{
+	width:100%;
+	height:150px;
+	background-color:#888888;
+}
+.content{
+	width:1024px;
+	margin:0 auto;
+	
+}
+
+.bg-light{
+	background-color: #FFFFFF !important;
+}
+
+
+.navbar{
+	padding:0px;
+}
+
+.nav{
+	height: 100px;
+}
+
+.fix{
+	width:500px;
+	max-width: 100%;
+}
+
+.headerfix{
+	background-color: #FFFFFF !important;
+	max-width: 100%;
+}
+
+.titlearea{
+	width:300px;
+	height:100px;
+}
+
+.informationArea{
+	width:950px;
+	height:75px;
+	padding:10px;
+	margin:0 auto;
+}
+
+.apiInformation{
+	width:950px;
+/*	height:400px;*/
+	padding:10px;
+	margin:0 auto;
+}
+
+.inf{
+	font-size:1.3em;
+	margin-bottom: 10px;
+}
+
+.caseInformation{
+	width:1050px;
+	height: 600px;
+	overflow:scroll;
+	margin:0 auto;
+	padding:10px;
+}
+
+.inventoryInformation{
+	width: 950px;
+	height:400px;
+	overflow:scroll;
+	margin:0 auto;
+	padding:10px;
+}
+
+.titleFix{
+	width:1050px;
+	height: 75px;
+	border-bottom:3px dashed #CCCCFF;
+	margin-bottom:15px;
+}
+
+.bottomFix{
+	width: 1050px;
+	height: 20px;
+	border-bottom: 3px dashed #CCCCFF;
+}
+
+.storeMain{
+	width: 350px;
+	margin-top:15px;
+}

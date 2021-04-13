@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>達達股票-下單</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/order.css">
+    <script src="js/jquery-3.5.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="header justify-content-center">
+        <div class="row">
+            <div class="col col-md-2 headerfix">
+            </div>
+            <div class="col navbar">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand" href="#">
+                        <img src="images/logo_small.png" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="fix">
+                        </div>
+                        <div class="navbar-nav">
+                            <a class="nav-item nav-link active" href="#">
+                                MikeChen,你好
+                            </a>
+                            <a class="nav-item nav-link active" href="#">登入</a>
+                            <a class="nav-item nav-link" href="#">登出</a>
+                            <a class="nav-item nav-link" href="#">註冊</a>
+                            <a class="nav-item nav-link" href="#">個人資訊</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="row justify-content-center">
+                <h1>2330 - 台積電</h1>
+        </div>
+        <div class="row tradeType">
+            <div class="tradeTypeLabel" style="height: 75px;width:75px;padding:15px;">
+                <h5>交易</h5>
+            </div>
+            <button class="btn btn-outline-primary tradeTypeButton">
+                整股
+            </button>
+            <button class="btn btn-outline-primary tradeTypeButton">
+                盤後
+            </button>
+            <button class="btn btn-outline-primary tradeTypeButton">
+                零股
+            </button>
+        </div>
+        <div class="row tradeCategory">
+            <div class="tradeCategoryLabel" style="height: 75px;width: 75px;padding:15px;">
+                <h5>種類</h5>
+            </div>
+            <button class="btn btn-outline-primary tradeCategoryButton">
+                現股
+            </button>
+            <button class="btn btn-outline-primary tradeCategoryButton">
+                融資
+            </button>
+            <button class="btn btn-outline-primary tradeCategoryButton">
+                融券
+            </button>
+        </div>
+        <div class="row oa">
+            <div class="row orderType">
+                <div class="orderTypeLabel" style="height: 75px;width: 75px;padding: 15px">
+                    <h5>買賣</h5>
+                </div>
+                <button class="btn btn-outline-primary orderTypeButton">
+                    買進
+                </button>
+                <button class="btn btn-outline-primary orderTypeButton">
+                    賣出
+                </button>
+            </div>
+            <div class="col amount">
+                <div class="input-group mb-6" style="width:100%; padding:15px;">
+                    <div class="amountLabel" style="padding:10px;">
+                        <h5>
+                            數量
+                        </h5>
+                    </div>
+                    <input type="text" class="form-control" placeholder="amount" aria-label="amount" aria-describedby="basic-addon1">
+                    <button class="btn btn-outline-primary amountButton">-</button>
+                    <button class="btn btn-outline-primary amountButton">+</button>
+                </div>
+            </div>
+        </div>
+        <div class="row price">
+        	<div class="input-group mb-6" style="width: 100%;padding: 15px;">
+        		<div class="priceLabel" style="padding:10px;">
+        			<h5>
+        				價格
+        			</h5>
+        		</div>
+        		                    <input type="text" class="form-control" placeholder="price" aria-label="price" aria-describedby="basic-addon1">
+                    <button class="btn btn-outline-primary amountButton">-</button>
+                    <button class="btn btn-outline-primary amountButton">+</button>
+        	</div>
+        </div>
+        <div class="row takeprice">
+        	<div class="takepriceLabel" style="height: 75px;width: 75px;padding:15px;">
+        		取價
+        	</div>
+        	<button class="btn btn-outline-primary takePriceButton">
+        		跌停
+        	</button>
+        	<button class="btn btn-outline-primary takePriceButton">
+        		漲停
+        	</button>
+        	<button class="btn btn-outline-primary takePriceButton">
+        		現價
+        	</button>
+        </div>
+        <div class="row justify-content-end" style="width:950px;margin:15px;">
+            <button class="btn btn-primary orderButton">
+                下單
+            </button>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="row" style="padding:15px">
+            <div class="col col-md-3 fix">
+            </div>
+            <div class="col col-md-2">
+                <img src="images/logo_small.png" alt="">
+            </div>
+            <div class="col col-md-3">
+                <div class="row" style="padding:35px">
+                    <div class="col col-md-3">
+                        <a href="#" style="text-decoration: none;color:black;">
+                            關於我們
+                        </a>
+                    </div>
+                    <div class="col col-md-1">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="col col-md-3">
+                        <a href="#" style="text-decoration: none;color:black;">
+                            聯繫我們
+                        </a>
+                    </div>
+                    <div class="col col-md-1">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="col col-md-3">
+                        <a href="">
+                            <img src="images/tedu_logo.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>4
+    </div>
+</body>
+
+</html>

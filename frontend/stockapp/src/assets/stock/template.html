@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<div id="app">
+    <div class="loading" style="width:700px;height:700px;margin:0 auto;margin-top:500px;padding-left:250px;" v-show="isLoading">
+        <letter-cube size="150px"></letter-cube>
+    </div>
+    <div class="header justify-content-center" v-show="!isLoading">
+        <div class="row">
+            <div class="col col-md-2 headerfix">
+            </div>
+            <div class="col navbar">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand" href="/">
+                        <img src="@/assets/images/logo_small.png" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="fix">
+                        </div>
+                        <div class="navbar-nav" style="width: 100%;">
+                            <div class="log" v-if="isLogin" style="padding:9px">
+                                <li class="nav-item active">
+                                    {{username}},你好
+                                </li>
+                            </div>
+                            <div class="log" v-if="!isLogin">
+                                <a class="nav-item nav-link active" href="/#/login">登入</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" @click="logout()">登出</a>
+                            </div>
+                            <div class="log" v-if="!isLogin">
+                                <a class="nav-item nav-link" href="/#/register">註冊</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" href="/#/self">個人資訊</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" href="/#/order">下單</a>
+                            </div>
+                            <div class="log">
+                                <a class="nav-item nav-link" href="/#/documentation" target="_blank">API文檔</a>
+                            </div>
+                            <div class="form-inline my-2 my-lg-0">
+                                <input class="form-control mr-sm-2" type="search" placeholder="輸入股票代號搜尋" aria-label="Search" id="stockno">
+                                <button class="btn btn-outline-primary my-2 my-sm-0" @click="toSearch()">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid content" v-show="!isLoading">
+        <div class="row" id="stockname">
+        </div>
+        <div class="row">
+            <div class="col chartarea inf" id="chartContainer">
+            </div>
+        </div>
+        <div class="row" style="height:300px">
+            <div class="col information" id="information">
+            </div>
+        </div>
+        <div class="row stockdata">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">date</th>
+                        <th scope="col">open</th>
+                        <th scope="col">close</th>
+                        <th scope="col">lowest</th>
+                        <th scope="col">highest</th>
+                    </tr>
+                </thead>
+                <tbody id="stockdata">
+                	<tr v-for="data in data1">
+                       <td col="row">{{data[0]}}</td>
+                       <td>{{data[1]}}</td>
+                       <td>{{data[2]}}</td>
+                       <td>{{data[3]}}</td>
+                       <td>{{data[4]}}</td>   
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+            <div class="row justify-content-end" style="padding:15px;margin: 20px;">
+        <button class="btn btn-primary" style="width: 150px;" @click="renderOrderPage()">
+            下單
+        </button>
+    </div>
+    </div>
+
+    <div class="footer" v-show="!isLoading">
+        <div class="row" style="padding:15px">
+            <div class="col col-md-3 fix">
+            </div>
+            <div class="col col-md-2">
+                <img src="@/assets/images/logo_small.png" alt="">
+            </div>
+            <div class="col col-md-3">
+                <div class="row" style="padding:35px">
+                    <div class="col col-md-3">
+                        <a href="#" style="text-decoration: none;color:black;">
+                            關於我們
+                        </a>
+                    </div>
+                    <div class="col col-md-1">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="col col-md-3">
+                        <a href="#" style="text-decoration: none;color:black;">
+                            聯繫我們
+                        </a>
+                    </div>
+                    <div class="col col-md-1">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="col col-md-3">
+                        <a href="">
+                            <img src="@/assets/images/tedu_logo.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

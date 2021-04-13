@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<div id="app">
+    <div class="header justify-content-center">
+        <div class="row">
+            <div class="col col-md-2 headerfix">
+            </div>
+            <div class="col navbar">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand" href="/">
+                        <img src="@/assets/images/logo_small.png" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="fix">
+                        </div>
+                        <div class="navbar-nav" style="width: 100%;">
+                            <div class="log" v-if="isLogin" style="padding:9px">
+                                <li class="nav-item active">
+                                    {{username}},你好
+                                </li>
+                            </div>
+                            <div class="log" v-if="!isLogin">
+                                <a class="nav-item nav-link active" href="/#/login">登入</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" @click="logout()">登出</a>
+                            </div>
+                            <div class="log" v-if="!isLogin">
+                                <a class="nav-item nav-link" href="/#/register">註冊</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" href="/#/self">個人資訊</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" href="/#/order">下單</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" href="/#/order">下單</a>
+                            </div>
+                            <div class="log">
+                                <a class="nav-item nav-link" href="/#/documentation" target="_blank">API文檔</a>
+                            </div>
+                            <div class="form-inline my-2 my-lg-0">
+                                <input class="form-control mr-sm-2" type="search" placeholder="輸入股票代號搜尋" aria-label="Search" id="stockno">
+                                <button class="btn btn-outline-primary my-2 my-sm-0" @click="toSearch()">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid content">
+        <div class="row">
+            <div class="col registerText reg">
+                <img src="@/assets/images/back.png" alt="">
+                <div class="regInf" style="position:absolute;top:10px;height:500px;overflow:scroll;">
+                    <h1>使用者條約</h1>
+                    <p>當勾選下方同意，代表您已同意以下條款:</p>
+                    <p><br /> <strong>一、認知與同意</strong></p>
+                    <p>達達股票交易所根據以下條款提供服務，</p>
+                    <p>如勾選同意並註冊，代表您已經同意以下條款。</p>
+                    <p><strong>二、隱私權服務</strong></p>
+                    <p>您的個人基本資料、委託明細以及交易明細均受到本站隱私條款保護及規範。</p>
+                    <p><strong>三、系統故障及維護</strong></p>
+                    <p>本站有可能會出現故障狀況，或許會使您的資料毀損、遺失，</p>
+                    <p>請您平時就自行採取保護措施，例如備份，</p>
+                    <p>如發生因故障而產生之資料損毀、遺失，或者交易失敗，</p>
+                    <p>本站並不負任何責任。</p>
+                    <p>另外本站會定期進行維護，維護時間皆會公告，</p>
+                    <p>煩請注意公告維護之時間，並且避免於維護時進行登入、交易等動作，</p>
+                    <p>如發生資料損毀、遺失、交易失敗本站皆不負任何責任。</p>
+                    <p><strong>四、服務變更及通知</strong></p>
+                    <p>本站有權力隨時更改、停止所有本站所提供之服務，</p>
+                    <p>如察覺會員有任何違規事項，</p>
+                    <p>本站有權利立即凍結、刪除其違規帳號。</p>
+                    <p><strong>五、資訊或建議</strong></p>
+                    <p>本站提供的所有資訊僅供參考使用，</p>
+                    <p>如有發生因本站提供之資訊虧損，</p>
+                    <p>本站並不負任何責任，</p>
+                    <p>請自行衡量交易並且謹慎使用。</p>
+                </div>
+            </div>
+            <div class="col registerForm reg">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">帳號</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" id="username">
+                </div>
+                <div class="usernameValidation validation">
+                    {{usernameErrorMsg}}
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">密碼</span>
+                    </div>
+                    <input type="password" class="form-control" placeholder="password" aria-label="password" aria-describedby="basic-addon1" id="pwd1">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">確認密碼</span>
+                    </div>
+                    <input type="password" class="form-control" placeholder="password2" aria-label="password2" aria-describedby="basic-addon1" id="pwd2">
+                </div>
+                <div class="passwordValidation validation">
+                    {{passwordErrorMsg}}
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">E-mail</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="email" aria-label="email" aria-describedby="basic-addon1" id="email">
+                </div>
+                <div class="emailValidation validation">
+                    {{emailErrorMsg}}
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">電話號碼</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="phone" aria-label="phone" aria-describedby="basic-addon1" id="phone">
+                </div>
+                <div class="phoneValidation validation">
+                    {{phoneErrorMsg}}
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">地址</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="address" aria-label="address" aria-describedby="basic-addon1" id="address">
+                </div>
+                <div class="addressValidation validation">
+                    {{addressErrorMsg}}
+                </div>
+                <div class="input-group mb-3 justify-content-end">
+                    <div class="agreement">
+                        <input class="form-check-input" type="checkbox" value="" id="agreement" v-model="agreecheck">
+                        <label class="form-check-label" for="agreement1">
+                            我已閱讀並同意本站條約
+                        </label>
+                        <div class="agreementValidation validation">
+                            {{agreementErrorMsg}}
+                        </div>
+                    </div>
+                    <div class="inputfix">
+                    </div>
+                    <button class="btn btn-primary" @click="register()">
+                        註冊
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="row" style="padding:15px">
+            <div class="col col-md-3 fix">
+            </div>
+            <div class="col col-md-2">
+                <img src="@/assets/images/logo_small.png" alt="">
+            </div>
+            <div class="col col-md-3">
+                <div class="row" style="padding:35px">
+                    <div class="col col-md-3">
+                        <a href="#" style="text-decoration: none;color:black;">
+                            關於我們
+                        </a>
+                    </div>
+                    <div class="col col-md-1">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="col col-md-3">
+                        <a href="#" style="text-decoration: none;color:black;">
+                            聯繫我們
+                        </a>
+                    </div>
+                    <div class="col col-md-1">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="col col-md-3">
+                        <a href="">
+                            <img src="@/assets/images/tedu_logo.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

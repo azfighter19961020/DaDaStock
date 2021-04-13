@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<div id="app">
+    <div class="loading" style="width:700px;height:700px;margin:0 auto;margin-top:500px;padding-left:250px;" v-show="isLoading">
+        <letter-cube size="150px"></letter-cube>
+    </div>
+    <div class="header justify-content-center" v-show="!isLoading">
+        <div class="row">
+            <div class="col col-md-2 headerfix">
+            </div>
+            <div class="col navbar">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand" href="/">
+                        <img src="@/assets/images/logo_small.png" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="fix">
+                        </div>
+                        <div class="navbar-nav" style="width: 100%;">
+                            <div class="log" v-if="isLogin" style="padding:9px">
+                                <li class="nav-item active">
+                                    {{username}},你好
+                                </li>
+                            </div>
+                            <div class="log" v-if="!isLogin">
+                                <a class="nav-item nav-link active" href="/#/login">登入</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" @click="logout()">登出</a>
+                            </div>
+                            <div class="log" v-if="!isLogin">
+                                <a class="nav-item nav-link" href="/#/register">註冊</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" href="/#/self">個人資訊</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" href="/#/order">下單</a>
+                            </div>
+                            <div class="log">
+                                <a class="nav-item nav-link" href="/#/documentation" target="_blank">API文檔</a>
+                            </div>
+                            <div class="form-inline my-2 my-lg-0">
+                                <input class="form-control mr-sm-2" type="search" placeholder="輸入股票代號搜尋" aria-label="Search" id="stockno">
+                                <button class="btn btn-outline-primary my-2 my-sm-0" @click="toSearch()">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="content" v-show="!isLoading">
+        <div class="row justify-content-center">
+            <h3 style="color:#CC66FF">{{overtimeMsg}}</h3>
+        </div>
+        <div class="row titleDiv justify-content-center">
+            <h1 style="color:#6699FF">下單</h1>
+        </div>
+        <div class="row stockno">
+            <div class="stockNoLabel" style="height: 75px;width:75px;padding:15px;">
+                <h5>股票代號</h5>
+            </div>
+            <div class="stocknoInput" style="width: 500px;height: 75px;padding:15px;">
+                <input type="text" class="form-control" placeholder="stockno" id="stockno" aria-label="stockno" aria-describedby="basic-addon1" v-model="inputStockno">
+            </div>
+            <div style="padding:15px;">
+                <span style="font-size: 1.5em;">{{stockname}}</span>  
+            </div>
+            
+        </div>
+        <div class="row tradeType">
+            <div class="tradeTypeLabel" style="height: 75px;width:75px;padding:15px;">
+                <h5>交易</h5>
+            </div>
+            <button class="btn btn-outline-primary tradeTypeButton" id="Intraday" @click="changePrimaryTradeType('Intraday')">
+                盤中
+            </button>
+            <button class="btn btn-outline-primary tradeTypeButton" id="Out" @click="changePrimaryTradeType('Out')">
+                盤後
+            </button>
+        </div>
+        <div class="row tradeType">
+            <div class="tradeTypeSecondLabel" style="height:75px;width: 75px;padding:15px">
+                <h5>股種</h5>
+            </div>
+            <button class="btn btn-outline-primary tradeTypeSecondButton" id="Common" @click="changeTradeType('Common')">
+                整股
+            </button>
+            <button class="btn btn-outline-primary tradeTypeSecondButton" id="Odd" @click="changeTradeType('Odd')">
+                零股
+            </button>
+        </div>
+        <div class="row tradeCategory">
+            <div class="tradeCategoryLabel" style="height: 75px;width: 75px;padding:15px;">
+                <h5>種類</h5>
+            </div>
+            <button class="btn btn-outline-primary tradeCategoryButton" id="Cash" @click="changeTradeCategoryType('Cash')">
+                現股
+            </button>
+            <button class="btn btn-outline-primary tradeCategoryButton" id="marginTrading" @click="changeTradeCategoryType('marginTrading')">
+                融資
+            </button>
+            <button class="btn btn-outline-primary tradeCategoryButton" id="ShortSelling" @click="changeTradeCategoryType('ShortSelling')">
+                融券
+            </button>
+        </div>
+        <div class="row pendingType">
+            <div class="pendingTypeLabel" style="height: 75px;width: 75px;padding:15px;">
+                <h5>掛單</h5>
+            </div>
+            <button class="btn btn-outline-primary pendingTypeButton" id="ROD" @click="changePendingType('ROD')">ROD</button>
+            <button class="btn btn-outline-primary pendingTypeButton" id="IOC" @click="changePendingType('IOC')">IOC</button>
+            <button class="btn btn-outline-primary pendingTypeButton" id="FOK" @click="changePendingType('FOK')">FOK</button>
+        </div>
+        <div class="row oa">
+            <div class="row orderType">
+                <div class="orderTypeLabel" style="height: 75px;width: 75px;padding: 15px">
+                    <h5>買賣</h5>
+                </div>
+                <button class="btn btn-outline-primary orderTypeButton" id="Buy" @click="changeOrderType('Buy')">
+                    買進
+                </button>
+                <button class="btn btn-outline-primary orderTypeButton" id="Sell" @click="changeOrderType('Sell')">
+                    賣出
+                </button>
+            </div>
+            <div class="amount">
+                <div class="input-group mb-6" style="width:100%; padding:15px;">
+                    <div class="amountLabel" style="padding:5px;width:55px;">
+                        <h5>
+                            數量
+                        </h5>
+                    </div>
+                    <input type="text" class="form-control" placeholder="amount" aria-label="amount" id="amount" aria-describedby="basic-addon1" value="1000">
+                    <button class="btn btn-outline-primary amountButton" @click="amountProcess('-')">-</button>
+                    <button class="btn btn-outline-primary amountButton" @click="amountProcess('+')">+</button>
+                </div>
+            </div>
+                   <div class="price">
+            <div class="input-group mb-6" style="width: 100%;padding: 15px;">
+                <div class="priceLabel" style="padding:5px;width:55px;">
+                    <h5>
+                        價格
+                    </h5>
+                </div>
+                <input type="text" class="form-control" placeholder="price" aria-label="price" id="price" aria-describedby="basic-addon1">
+                <button class="btn btn-outline-primary amountButton" @click="priceProcess('-')">-</button>
+                <button class="btn btn-outline-primary amountButton" @click="priceProcess('+')">+</button>
+            </div>
+        </div>
+        </div>
+ 
+        <div class="row takeprice">
+            <div class="takepriceLabel" style="height: 75px;width: 75px;padding:15px;">
+                取價
+            </div>
+            <button class="btn btn-outline-primary takePriceButton" id="LimitDown" @click="changeTakePrice('LimitDown')">
+                跌停
+            </button>
+            <button class="btn btn-outline-primary takePriceButton" id="LimitUp" @click="changeTakePrice('LimitUp')">
+                漲停
+            </button>
+            <button class="btn btn-outline-primary takePriceButton" id="Unchanged" @click="changeTakePrice('Unchanged')">
+                現價
+            </button>
+        </div>
+        <div class="row justify-content-center">
+            <h3>
+                {{priceErrorMsg}}
+            </h3>
+        </div>
+        <div class="row justify-content-end" style="width:950px;margin:15px;">
+            <button class="btn btn-primary orderButton" @click="submitOrder()">
+                下單
+            </button>
+        </div>
+    </div>
+    <div class="footer" v-show="!isLoading">
+        <div class="row" style="padding:15px">
+            <div class="col col-md-3 fix">
+            </div>
+            <div class="col col-md-2">
+                <img src="@/assets/images/logo_small.png" alt="">
+            </div>
+            <div class="col col-md-3">
+                <div class="row" style="padding:35px">
+                    <div class="col col-md-3">
+                        <a href="#" style="text-decoration: none;color:black;">
+                            關於我們
+                        </a>
+                    </div>
+                    <div class="col col-md-1">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="col col-md-3">
+                        <a href="#" style="text-decoration: none;color:black;">
+                            聯繫我們
+                        </a>
+                    </div>
+                    <div class="col col-md-1">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="col col-md-3">
+                        <a href="">
+                            <img src="@/assets/images/tedu_logo.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

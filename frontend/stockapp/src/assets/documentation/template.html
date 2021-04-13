@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<div id="app">
+    <div class="left-menu">
+        <div class="content-logo">
+            <img src="@/assets/images/logo_small.png" height="32" />
+            <span>DaDa Stock API Documentation</span>
+        </div>
+        <div class="content-menu">
+            <ul>
+                <li class="scroll-to-link active">
+                    <a @click="scrollToCharacter($event)" data-target="get-started" class="scrolla">GET STARTED</a>
+                </li>
+                <li class="scroll-to-link">
+                    <a @click="scrollToCharacter($event)" data-target="Login" class="scrolla">Login</a>
+                </li>
+                <li class="scroll-to-link">
+                    <a @click="scrollToCharacter($event)" data-target="Const" class="scrolla">API Constant Variables</a>
+                </li>
+                <li class="scroll-to-link">
+                    <a @click="scrollToCharacter($event)" data-target="GetData" class="scrolla">Get Stock Data</a>
+                </li>
+                <li class="scroll-to-link">
+                    <a @click="scrollToCharacter($event)" data-target="GetKbarData" class="scrolla">Get Kbar Data</a>
+                </li>
+                <li class="scroll-to-link">
+                    <a @click="scrollToCharacter($event)" data-target="OrderOperation" class="scrolla">Order Operation</a>
+                </li>
+                <li class="scroll-to-link">
+                    <a @click="scrollToCharacter($event)" data-target="Inventory" class="scrolla">Check Inventory</a>
+                </li>
+                <li class="scroll-to-link">
+                  <a @click="scrollToCharacter($event)" data-target="Balance" class="scrolla">Check Balance</a>
+                </li>
+                <li class="scroll-to-link">
+                    <a @click="scrollToCharacter($event)" data-target="Additional" class="scrolla">Additional</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="content-page">
+        <div class="content-code"></div>
+        <div class="content">
+            <div class="overflow-hidden content-section" id="content-get-started">
+                <h1 id="get-started">Get started</h1>
+                <pre v-highlightjs>
+                  <h4>On Windows 7 / 8 / 10</h4>
+                  <code class="bash">
+                    $ pip install dada_stock
+                  </code>
+                  <h4>On Linux</h4>
+                  <code class="bash">
+                    $ pip3 install dada_stock
+                  </code>
+                  <h4>Attention! You can only use this API on python 3.7 or higher</h4>
+                  <h4>Python2 is deprecated</h4>
+                  <h4>And you can instantiate API class with the code below</h4>
+                  <code class="python">
+                    import stockApi
+                    api = stockApi()
+                  </code>
+                </pre>
+                <p>
+                    This API provides get stock data,order opoeration,and get inventory info service, which is use for dada stock website.
+                </p>
+                <p>
+                    To use this API, you need to use <span style="font-weight: bold">pip command</span> to install , you can install with right side command.
+                </p>
+                <p>
+                    After install this API, you can import this API class and start to use it.
+                </p>
+            </div>
+            <div class="overflow-hidden content-section" id="content-Login">
+                <h2 id="Login">Login</h2>
+                <pre v-highlightjs>
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                   <code class="python">
+"""
+You can check your secret client id and secret token in your information page.
+"""
+loginResult = api.login(
+secretClientId = "Your secrect Client Id",
+secretToken = "Your secret Token",
+)                   
+                   </code>
+                </pre>
+                <p>
+                    To login, you need to get secret client id and secret token from our website:
+                    <img src="https://i.imgur.com/beMPnp5.png" alt="">
+                </p>
+                <p>
+                   If you don't have account, please register and you will be able to check both secretToken and secretClientId in your information page after register successfully.
+                </p>
+                <p>
+                  After taking clientId and token, you can use syntax on the right side to login for operations.
+                </p>
+            </div>
+            <div class="overflow-hidden content-section" id="content-Const">
+              <h2 id="Const">API Constant Variables</h2>
+                <pre v-highlightjs>
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                   <code class="python">
+"""
+example code for api.constant
+"""
+import stockApi
+api = stockApi()
+loginResult = api.login(
+secretClientId = "Your secrect Client Id",
+secretToken = "Your secret Token",
+)
+result = api.createOrder(stockno = "1435", \
+                         amount = 1000, \
+                         orderType = api.constant.Buy, \
+                         price = 24, \
+                         tradeType = api.constant.Common, \
+                         tradeCategory = api.constant.Cash, \
+                         takeprice = api.constant.Unchanged, \
+                         pendingType = api.constant.ROD)              
+                   </code>
+                </pre>
+                <p>
+              <p>There are several constant variables included in this API.</p>
+              <p>You can access them after instantiate API class and use <span style="font-weight:bold;">api.constant</span>.</p>
+              <p>There is a sample code at right side.</p>
+              <p>And the table of constant variables have been showed below.</p>
+              <table style="margin:0 50px;">
+                <thead>
+                  <tr>
+                    <th>Const</th>
+                    <th>Meaning</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Common</td>
+                    <td>Trade Type constant variable,<span style="font-weight: bold;">intraday trading</span>, it means you can't specify amount under 1,000.</td>
+                  </tr>
+                  <tr>
+                    <td>Fixing</td>
+                    <td>Trade Type constant variable,<span style="font-weight: bold;">after-hour trading</span> with at least 1,000 amount,but it also means you can't specify trade category except Cash,also you can't specify pending type except ROD.</td>
+                  </tr>
+                  <tr>
+                    <td>Odd</td>
+                    <td>Trade Type constant variable, <span style="font-weight: bold;">after-hour trading</span> ,it means you can trade with lower limit 1 amount,but it also means you can't specify trade category except Cash,also you can't specify pending type except ROD.</td>
+                  </tr>
+                  <tr>
+                    <td>IntradayOdd</td>
+                    <td>Trade Type constant variable, <span style="font-weight: bold;">intraday trading</span> with at least 1 amount,but it also means you can't specify trade category except Cash,also you can't specify pending type except ROD.</td>
+                  </tr>
+                  <tr>
+                    <td>Cash</td>
+                    <td>Trade Category constant variable, means trade with cash</td>
+                  </tr>
+                  <tr>
+                    <td>MarginTrading</td>
+                    <td>Trade Category constant variable,can not be specify with Fixing, Odd or IntradayOdd.</td>
+                  </tr>
+                  <tr>
+                    <td>ShortSelling</td>
+                    <td>Trade Category constant variable,can not be specify with Fixing,Odd or IntradayOdd.</td>
+                  </tr>
+                  <tr>
+                    <td>ROD</td>
+                    <td>Pending Type constant variable,means you can wait pending until closing,but the order canceled after closing time.</td>
+                  </tr>
+                  <tr>
+                    <td>IOC</td>
+                    <td>Pending Type constant variable,means the order will be canceled if the order doesn't dealed immediately,can not be specify with Fixing,Odd or IntradayOdd.</td>
+                  </tr>
+                  <tr>
+                    <td>FOK</td>
+                    <td>Pending Type constant variable,means if the order isn't dealed completely,this order will be canceled after closing.can not be specify with Fixing,Odd or IntradayOdd.</td>
+                  </tr>
+                  <tr>
+                    <td>Buy</td>
+                    <td>Order Type constant variable,be used when you want to get stock by variaous trade category.</td>
+                  </tr>
+                  <tr>
+                    <td>Sell</td>
+                    <td>Order Type constant variable,be used when you want to sell your inventory of stock.</td>
+                  </tr>
+                  <tr>
+                    <td>LimitDown</td>
+                    <td>Take price constant variable,Limit Down is a kind of limit price order,if market price reached this price,this order will be dealed.Formula of price is <span style="font-weight: bold">(market price) * 0.9</span></td>
+                  </tr>
+                  <tr>
+                    <td>LimitUp</td>
+                    <td>Take price constant variable,Limit Up is a kind of limit price order,if market price reaced this price,this order will be dealed.Formula of price is <span style="font-weight: bold">(market price) * 1.1</span></td>
+                  </tr>
+                  <tr>
+                    <td>Unchanged</td>
+                    <td>Take price constant variable,set price with market price.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="overflow-hidden content-section" id="content-GetData">
+              <h2 id="GetData">Get Stock Data</h2>
+              <pre v-highlightjs>
+                <code class="python">
+"""
+stock data is return as Tick class
+"""
+api = stockApi()
+data = api.stockdata("1455")
+print(data)
+"""
+result:
+{
+        "stockid":1455,
+        "stockname":集盛,
+        "date":['2018/01/02', '2018/01/03', '2018/01/04', '2018/01/05',
+         '2018/01/08', '2018/01/09', '2018/01/10', '2018/01/11', 
+         '2018/01/12', '2018/01/15', '2018/01/16', '2018/01/17',
+          '2018/01/18', '2018/01/19', '2018/01/22'],
+        "openprice":[12.85, 12.65, 12.5, 12.45, 12.5, 12.5,
+         12.55, 12.7, 12.8, 12.9, 12.65, 12.5, 12.45, 12.35, 12.05],
+        "closeprice":[12.7, 12.45, 12.4, 12.45, 12.45, 12.5,
+         12.7, 12.75, 12.8, 12.65, 12.5, 12.4, 12.3, 12.05, 12.05],
+        "lowprice":[12.5, 12.45, 12.35, 12.4, 12.4, 12.4, 
+        12.55, 12.7, 12.7, 12.65, 12.45, 12.35, 12.3, 12.05, 11.8],
+        "highprice":[12.9, 12.7, 12.7, 12.6, 12.6, 12.65, 
+        12.95, 12.9, 12.9, 13.1, 12.75, 12.55, 12.65, 12.4, 12.15],
+        "volume":[8563635, 9818894, 10624044, 6787106, 5248866,
+         6671917, 23965300, 12113865, 7752571, 22638653,
+          7871354, 5907833, 21134507, 10067689, 8856601],
+}
+"""
+
+"""
+or you can access data by properties
+"""
+print(data.date)
+"""
+result:
+['2018/01/02', '2018/01/03', '2018/01/04', '2018/01/05', 
+'2018/01/08', '2018/01/09', '2018/01/10', '2018/01/11', 
+'2018/01/12', '2018/01/15', '2018/01/16', '2018/01/17', 
+'2018/01/18', '2018/01/19', '2018/01/22']
+"""
+                </code>
+              </pre>
+              <p>You can get stock data by stockno, and you don't have to login.</p>
+              <p>Once you get stockdata with API,API return a Tick object with stock data.</p>
+              <p>And you can access data by reading class attributes syntax,</p>
+              <p>or you can just print Tick instance,</p>
+              <p>this Tick object will be transformed into special format.</p>
+            </div>
+            <div class="overflow-hidden content-section" id="content-GetKbarData">
+              <h2 id="GetKbarData">Get Kbar Data</h2>
+              <pre v-highlightjs>
+                <code class="python">
+"""
+Kbar data is return as DataFrame
+"""
+api = stockApi() 
+"""
+the arguments are stockno / startDate / endDate.
+"""
+print(api.getKBardata("1435","20210101","20210301"))
+"""
+result:
+            openprice  closeprice   lowprice  highprice   volume
+date
+2021/01/04  22.950001   25.600000  22.950001  25.600000   621682
+2021/01/05  27.000000   26.400000  26.000000  27.500000   744028
+2021/01/06  27.799999   26.549999  26.500000  27.799999   623356
+2021/01/07  27.600000   29.200001  26.700001  29.200001  1332051
+2021/01/08  28.900000   29.799999  28.500000  31.250000   431499
+2021/01/11  29.450001   27.650000  27.200001  29.750000   558605
+2021/01/12  27.500000   27.950001  27.400000  28.250000   289716
+2021/01/13  29.350000   28.850000  27.650000  29.350000   366991
+2021/01/14  29.150000   29.600000  28.850000  29.600000   211287
+2021/01/15  29.600000   29.600000  29.200001  30.450001   405595
+2021/01/18  29.450001   29.600000  28.700001  30.400000   347571
+2021/01/19  29.799999   29.400000  29.299999  29.799999   124537
+2021/01/20  29.500000   28.049999  27.850000  29.500000   358466
+2021/01/21  28.100000   28.250000  28.100000  28.400000   149804
+2021/01/22  28.150000   28.400000  28.100000  28.400000    53040
+2021/01/25  28.200001   29.100000  28.200001  29.299999   104811
+2021/01/26  29.049999   28.200001  28.100000  29.049999    96811 .....
+
+"""                 
+                </code>
+              </pre>
+              <p>Except get stock data, you can get Kbar data by stockno,start date,and end date.</p>
+              <p>Also, you can access Kbar data without login.</p>
+              <p>This class method return a DataFrame(<a href="https://pandas.pydata.org/docs/reference/frame.html" target="_blank">pandas</a> data structure),</p>
+              <p>and the columns of data are date,open price,close price,low price,high price,and volume,</p>
+              <p>and the column date is the index of returned Dataframe.</p>
+
+            </div>
+            <div class="overflow-hidden content-section" id="content-OrderOperation">
+              <h2 id="OrderOperation">Order operation</h2>
+              <pre v-highlightjs>
+                <code class="python">
+"""
+instantiate API class and login,
+order operation needs login, if you don't login,
+API will raise exception.
+"""
+api = stockApi()
+loginResult = api.login(
+  secretClientId = "Your secret client Id",
+  secretToken = "Your secret token",
+)  
+"""
+After login,you can create order with various parameters,
+if you are missing one or more parameters,
+API will raise exception.
+And this method returns Trade class.
+"""                
+result = api.createOrder(stockno = "1435", \
+            amount = 1000, \
+            orderType = api.constant.Buy, \
+            price = 24, \
+            tradeType = api.constant.Odd, \
+            tradeCategory = api.constant.Cash, \
+            takeprice = api.constant.Unchanged, \
+            pendingType = api.constant.ROD)
+"""
+result:
+{
+        orderno:2230f5bf,
+        stockno:1435,
+        stockname:中福,
+        amount:1000,
+        orderType:Buy,
+        price:24,
+        tradeCategory:Cash,
+        tradeType:Common,
+        takeprice:Unchanged,
+        pendingType:ROD,
+        state:預約委託,
+
+}
+"""
+
+"""
+you can check order by passing orderno,
+or cancel order by Trade class.
+"""
+check = api.checkOrder(result.orderno)
+print(check)
+"""
+result:
+
+check order also returns trade class,
+{
+        orderno:d854184e,
+        stockno:1435,
+        stockname:中福,
+        amount:1000,
+        orderType:Buy,
+        price:24.0,
+        tradeCategory:Cash,
+        tradeType:Common,
+        takeprice:Unchanged,
+        pendingType:ROD,
+        state:預約委託,
+
+}
+"""
+
+"""
+Or you can modify Order by passing orderno,modify field and modify value
+"""
+modifyResult = api.modifyOrder(result,"price",21)
+print(modifyResult)
+
+"""
+{
+        orderno:75a40196,
+        stockno:1435,
+        stockname:中福,
+        amount:1000,
+        orderType:Buy,
+        price:21,
+        tradeCategory:Cash,
+        tradeType:Odd,
+        takeprice:LimitDown,
+        pendingType:ROD,
+        state:預約委託,
+
+}
+"""
+
+
+"""
+Or just cancel by using Trade object
+"""
+
+r = api.cancelOrder(modifyResult)
+print(r)
+
+"""
+result:
+
+cancel order returns trade class:
+{
+        orderno:d854184e,
+        stockno:1435,
+        stockname:中福,
+        amount:1000,
+        orderType:Buy,
+        price:24.0,
+        tradeCategory:Cash,
+        tradeType:Common,
+        takeprice:Unchanged,
+        pendingType:ROD,
+        state:委託取消,
+
+}
+"""
+                </code>
+              </pre>
+            <p>You can do create,check,cancel,and modify order operation with this API,</p>
+            <p>but you <span style="color:red;font-weight: bold;">must</span> login before doing these operations,</p>
+            <p>or the exception will be raised unless you login.</p>
+            <p>You can create Order with createOrder method and using api.constant variables for passing createOrder arguments,</p>
+            <p>but a Python native exception <span style="font-weight: bold;">TypeError</span> will be raised if you miss one or more arguments.</p>
+            <p>Also,misspelling or passing incorrect argument,</p>
+            <p>such as you specify trade type as Fixing,IntradayOdd or Odd,</p>
+            <p>but you pass trade category with Margin Trading,exception will also be raised.</p>
+            <p>After successfully create order, the method will return a Trade object,which you can get properties by using reading class attributes syntax,</p>
+            <p>or you can just print it and data will be printed with speical format.</p>
+            <p>Also,you can cancel order by passing a Trade object,</p>
+            <p>but if you pass a Trade object with wrong data,</p>
+            <p>an exception will be raised until you pass correct data.</p>
+            <p>At last,you can check order information by using checkOrder method,</p>
+            <p>Just pass order no, and you will receive a Trade object,</p>
+            <p>which carrys the data of order details.</p>
+            <p>But an exception will be raised if you pass an incorrect orderno.</p>
+            <p>At last,you can modify order parameter by passing Trade object that contains modified information,</p>
+            <p>also if you miss one or more arguments,</p>
+            <p>a Python native exception <span style="font-weight: bold;">TypeError</span> will be raised.</p>
+            </div>
+            <div class="overflow-hidden content-section" id="content-Inventory">
+              <pre v-highlightjs>
+                <br>
+                <br>
+                <br>
+                <br>
+                <code class="python">
+"""
+you must login for taking inventory data
+"""
+api = stockApi()
+loginResult = api.login(
+  secretClientId = "Your secret client Id",
+  secretToken = "Your secret token",
+)
+inventories = api.getInventory()
+for inventoryRecord in inventories:
+  print(inventoryRecord)
+
+"""
+example result:
+
+          {
+                  stockno:1459,
+                  stockname:聯發紡織纖維,
+                  amount:2000,
+                  price:10
+          }
+
+
+          {
+                  stockno:1474,
+                  stockname:弘裕企業,
+                  amount:2000,
+                  price:12
+          }
+
+
+          {
+                  stockno:1435,
+                  stockname:中福,
+                  amount:4000,
+                  price:23
+          }
+
+
+          {
+                  stockno:1469,
+                  stockname:理隆,
+                  amount:1010,
+                  price:23
+          }
+
+"""
+
+                </code>
+              </pre>
+              <h2 id="Inventory">Check inventory</h2>
+              <p>you can check your inventory by this API too.</p>
+              <p>Before accessing inventory data,</p>
+              <p>you <span style="color:red;font-weight: bold;">must </span> login,or an exception will be raised.</p>
+              <p>After instantiate API class and login,</p>
+              <p>you can use getInventory method to get inventory data.</p>
+              <p>This method returns a list,which contains inventory objects,</p>
+              <p>each inventory object contains a stock data which you have.</p>
+              <p>And you can use for loop to iterate the data,</p>
+              <p>just print them,they will be printed in special format.</p>
+              <p>There is a sample code at right side.</p>
+            </div>
+            <div class="overflow-hidden content-section" id="content-Balance">
+              <pre v-highlightjs>
+                <br>
+                <br>
+                <br>
+                <code class="python">
+import stockApi
+api = stockApi()
+loginResult = api.login(
+  secretClientId = "Your secret client id",
+  secretToken = "Your secret token",
+)      
+print(api.getBalance())
+"""
+result:
+{'balance': "Your balance"}
+"""
+                </code>
+                
+              </pre>
+              <h2 id="Balance">Get Balance</h2>
+              <p>You can check your left balance by using getBalance method,</p>
+              <p>before using getBalance method,you <span style="color:red;font-weight: bold;">must</span> Login,</p>
+              <p>or an exception will be raised.</p>
+              <p>This method returns a dict that contains your balance information.</p>
+            </div>
+            <div class="overflow-hidden content-section" id="content-Additional">
+              <pre v-highlightjs>
+                <br>
+                <br>
+                <br>
+                <code class="python">
+"""
+use toDict method
+"""
+import stockApi
+api = stockApi()
+print(pd.DataFrame(api.stockdata("1455").toDict()))
+"""
+result:
+           date  openprice  closeprice  lowprice  highprice    volume
+0    2018/01/02      12.85       12.70     12.50      12.90   8563635
+1    2018/01/03      12.65       12.45     12.45      12.70   9818894
+2    2018/01/04      12.50       12.40     12.35      12.70  10624044
+3    2018/01/05      12.45       12.45     12.40      12.60   6787106
+4    2018/01/08      12.50       12.45     12.40      12.60   5248866
+..          ...        ...         ...       ...        ...       ...
+777  2021/03/18      12.00       11.95     11.80      12.00   9569600
+778  2021/03/19      11.95       11.75     11.70      11.95   3837956
+779  2021/03/22      11.70       11.95     11.45      12.10   9749470
+780  2021/03/23      12.00       11.80     11.75      12.30   8125962
+781  2021/03/24      11.75       11.95     11.75      12.20   7147068
+"""
+                </code>
+              </pre>
+              <h2 id="Additional">Additional</h2>
+              <p>This API contains three object class: </p>
+              <p>Inventory,Trade and Tick.</p>
+              <p>Every object class has toDict method,</p>
+              <p>which will transform class attribute to dictionary.</p>
+              <p>Once you get dictionary,you can easily transform it into <a href="https://pandas.pydata.org/docs/reference/frame.html" target="_blank">pandas</a> DataFrame data structure.</p>
+              <p>You can check example code at right side.</p>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

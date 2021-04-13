@@ -1,0 +1,107 @@
+.header{
+	width:1920px;
+	height:110px;
+	background-color:#FFFFFF;
+}
+.footer{
+	width:1920px;
+	height:150px;
+	background-color:#888888;
+}
+.content{
+	width:1024px;
+	margin:0 auto;
+	
+}
+
+.bg-light{
+	background-color: #FFFFFF !important;
+}
+
+
+.navbar{
+	padding:0px;
+}
+
+.nav{
+	height: 100px;
+}
+
+.fix{
+	width:500px;
+	max-width: 100%;
+}
+
+.headerfix{
+	background-color: #FFFFFF !important;
+	max-width: 100%;
+}
+
+.stockNo{
+	width:450px;
+	height:75px;
+}
+
+.tradeType{
+	width:950px;
+	height: 75px;
+	margin:15px;
+}
+
+.tradeCategory{
+	width: 950px;
+	height:75px;
+	margin:15px;
+}
+
+.orderType{
+	width: 450px !important;
+	height: 75px !important;
+	margin:15px 25px 15px 30px;
+}
+
+.amount{
+	width: 450px !important;
+	height: 75px !important;
+	margin:15px 15px 15px 30px;
+}
+
+.oa{
+	width: 950px;
+	height: 100px;
+	margin:0;
+}
+
+.price{
+	width:450px;
+	height:75px;
+	margin:15px;
+}
+
+.takeprice{
+	width:950px;
+	height:75px;
+	margin:15px;
+}
+
+.orderButton, .tradeTypeButton, .tradeCategoryButton, .takePriceButton{
+	width: 250px;
+	height: 70px;
+	margin:0 15px 0 15px;
+}
+
+.orderTypeButton{
+	width:150px;
+	height: 70px;
+	margin:0 15px 0 15px; 
+}
+
+.amountButton{
+	width:55px;
+	height: 40px;
+	margin-right: 5px;
+}
+
+.tradeType, .tradeCategory, .orderType, .amount, .price, .takeprice{
+	border:3px dashed #CCCCFF;
+}

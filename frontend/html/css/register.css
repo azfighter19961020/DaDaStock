@@ -1,0 +1,65 @@
+.header{
+	width:1920px;
+	height:110px;
+	background-color:#FFFFFF;
+}
+.footer{
+	width:1920px;
+	height:150px;
+	background-color:#888888;
+}
+.content{
+	width:1024px;
+	margin:0 auto;
+}
+
+.bg-light{
+	background-color: #FFFFFF !important;
+}
+
+
+.navbar{
+	padding:0px;
+}
+
+.nav{
+	height: 100px;
+}
+
+.fix{
+	width:500px;
+	max-width: 100%;
+}
+
+.headerfix{
+	background-color: #FFFFFF !important;
+	max-width: 100%;
+}
+
+.registerText{
+	width:450px !important;
+	height:500px !important;
+	padding:0;
+}
+
+.registerForm{
+	width:450px !important;
+	height:500px !important;
+	padding-top:40px;
+}
+
+.reg{
+	margin:40px;
+}
+
+.registerText img{
+	opacity: 0.5;
+}
+
+.validation{
+	height:25px;
+}
+
+.inputfix{
+	width:35px;
+}

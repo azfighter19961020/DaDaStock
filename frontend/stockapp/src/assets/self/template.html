@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<div id="app">
+    <div class="loading" style="width:700px;height:700px;margin:0 auto;margin-top:500px;padding-left:250px;" v-show="isLoading">
+        <letter-cube size="150px"></letter-cube>
+    </div>
+    <div class="header justify-content-center" v-show="!isLoading">
+        <div class="row">
+            <div class="col col-md-2 headerfix">
+            </div>
+            <div class="col navbar">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand" href="/">
+                        <img src="@/assets/images/logo_small.png" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="fix">
+                        </div>
+                        <div class="navbar-nav" style="width: 100%;">
+                            <div class="log" v-if="isLogin" style="padding:9px">
+                                <li class="nav-item active">
+                                    {{username}},你好
+                                </li>
+                            </div>
+                            <div class="log" v-if="!isLogin">
+                                <a class="nav-item nav-link active" href="/#/login">登入</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" @click="logout()">登出</a>
+                            </div>
+                            <div class="log" v-if="!isLogin">
+                                <a class="nav-item nav-link" href="/#/register">註冊</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" href="/#/self">個人資訊</a>
+                            </div>
+                            <div class="log" v-if="isLogin">
+                                <a class="nav-item nav-link" href="/#/order">下單</a>
+                            </div>
+                            <div class="log">
+                                <a class="nav-item nav-link" href="/#/documentation" target="_blank">API文檔</a>
+                            </div>
+                            <div class="form-inline my-2 my-lg-0">
+                                <input class="form-control mr-sm-2" type="search" placeholder="輸入股票代號搜尋" aria-label="Search" id="stockno">
+                                <button class="btn btn-outline-primary my-2 my-sm-0" @click="toSearch()">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid content" v-show="!isLoading">
+        <div class="row titleFix">
+            <div class="fix" style="width:100%;height:30px;"></div>
+            <h2 style="color:#CC99FF">
+                修改個人資訊
+            </h2>
+        </div>
+        <div class="row informationArea">
+            <div class="col col-md-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">username</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="username" aria-label="username" aria-describedby="basic-addon1" id="username">
+                    <button class="btn btn-primary" @click="fix('username')">
+                        修改
+                    </button>
+                </div>
+            </div>
+            <div class="col col-md-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">email</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="email" aria-label="email" aria-describedby="basic-addon1" id="email">
+                    <button class="btn btn-primary" @click="fix('email')">
+                        修改
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row informationArea">
+            <div class="col col-md-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">phone</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="phone" aria-label="phone" aria-describedby="basic-addon1" id="phone">
+                    <button class="btn btn-primary" @click="fix('phone')">
+                        修改
+                    </button>
+                </div>
+            </div>
+            <div class="col col-md-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">address</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="address" aria-label="address" aria-describedby="basic-addon1" id="address">
+                    <button class="btn btn-primary" @click="fix('address')">
+                        修改
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row bottomFix">
+        </div>
+        <div class="row titleFix">
+            <div class="fix" style="width:100%;height:30px;"></div>
+            <h2 style="color:#CC99FF">
+                修改密碼
+            </h2>
+        </div>
+        <div class="row informationArea">
+            <div class="col col-md-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">舊密碼</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="oldPassword" aria-label="oldPassword" aria-describedby="basic-addon1" id="oldPassword">
+                </div>
+            </div>
+            <div class="col col-md-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">新密碼</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="newPassword" aria-label="newPassword" aria-describedby="basic-addon1" id="newPassword">
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-end" style="padding-right:65px;">
+            <button class="btn btn-primary" @click="fixPassword()">
+                修改密碼
+            </button>
+        </div>
+        <div class="row bottomFix">
+        </div>
+        <div class="row titleFix">
+            <div class="fix" style="width:100%;height:30px;"></div>
+            <h2 style="color:#CC99FF">
+                個人API憑證及餘額資訊
+            </h2>
+        </div>
+        <div class="apiInformation">
+            <div class="inf">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">clientId</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="clientId" aria-label="clientId" aria-describedby="basic-addon1" id="secretClientId" readonly>
+                    <button class="btn btn-outline-light" @click="IdFade()"><img src="@/assets/images/eye_close.png" alt="" id="eyeId"></button>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">clientToken</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="clientId" aria-label="clientId" aria-describedby="basic-addon1" id="secretToken" readonly>
+                    <button class="btn btn-outline-light" @click="tokenFade()"><img src="@/assets/images/eye_close.png" alt="" id="eyeToken"></button>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            餘額
+                        </span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="balance" aria-label="balance" aria-describedby="basic-addon1" id="balance" readonly>
+                    <button class="btn btn-outline-light" @click="balanceFade()"><img src="@/assets/images/eye_close.png" id="eyeBalance" alt=""></button>
+
+                </div>
+                <div class="row storeBlock">
+                    <button class="btn btn-outline-primary" @click="showStoreMain()">
+                        儲值
+                    </button>
+                </div>
+                <div class="storeMain input-group mb-3" v-show="isStore">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">請輸入金額</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="儲值金額" aria-label="balance" aria-describedby="basic-addon1" id="store" v-model="storeText">
+                    <button class="btn btn-outline-primary" @click="toStore()">
+                        儲值
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row bottomFix"></div>
+        <div class="row titleFix">
+            <div class="fix" style="width:100%;height:30px;"></div>
+            <h2 style="color:#CC99FF">
+                個人委託資訊
+            </h2>
+        </div>
+        <div class="caseInformation">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">委託單號</th>
+                        <th scope="col">委託時間</th>
+                        <th scope="col">股票代號</th>
+                        <th scope="col">股票名稱</th>
+                        <th scope="col">成交股數</th>
+                        <th scope="col">成交價格</th>
+                        <th scope="col">委賣/委買</th>
+                        <th scope="col">掛單</th>
+                        <th scope="col">取消</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="data in orderdata">
+                        <th scope="row">{{data.orderno}}</th>
+                        <td>{{data.date}}</td>
+                        <td>{{data.stockno}}</td>
+                        <td>{{data.stockname}}</td>
+                        <td>{{data.amount}}</td>
+                        <td>{{data.price}}</td>
+                        <td>{{data.state}}</td>
+                        <td>{{data.pendingType}}</td>
+                        <td><button class="btn btn-outline-danger" @click="cancelOrderFunc(data.orderno)">取消委託</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row bottomFix"></div>
+        <div class="row titleFix">
+            <div class="fix" style="width:100%;height:30px;"></div>
+            <h2 style="color:#CC99FF">
+                個人庫存資訊
+            </h2>
+        </div>
+        <div class="inventoryInformation">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">股票代號</th>
+                        <th scope="col">股票名稱</th>
+                        <th scope="col">數量</th>
+                        <th scope="col">持有價格</th>
+                        <th scope="col">總價</th>
+                        <th scope="col">市價</th>
+                        <th scope="col">未實現損益</th>
+                        <th scope="col">下單</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="data in inventoryData">
+                        <th scope="row">{{data.stockno}}</th>
+                        <th>{{data.stockname}}</th>
+                        <th>{{data.amount}}</th>
+                        <th>{{data.price}}</th>
+                        <th>{{(data.price * data.amount).toLocaleString()}}</th>
+                        <th>{{data.nowPrice.toLocaleString()}}</th>
+                        <th><span :style="data.unRealize > 0 ? {color:'red'} : {color:'green'}">{{(data.unRealize).toLocaleString()}}</span></th>
+                        <th><a :href="'/#/order/'+data.stockno"><button class="btn btn-primary" style="width:150px">下單</button></a></th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="footer" v-show="!isLoading">
+        <div class="row" style="padding:15px">
+            <div class="col col-md-3 fix">
+            </div>
+            <div class="col col-md-2">
+                <img src="@/assets/images/logo_small.png" alt="">
+            </div>
+            <div class="col col-md-3">
+                <div class="row" style="padding:35px">
+                    <div class="col col-md-3">
+                        <a href="#" style="text-decoration: none;color:black;">
+                            關於我們
+                        </a>
+                    </div>
+                    <div class="col col-md-1">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="col col-md-3">
+                        <a href="#" style="text-decoration: none;color:black;">
+                            聯繫我們
+                        </a>
+                    </div>
+                    <div class="col col-md-1">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="col col-md-3">
+                        <a href="">
+                            <img src="@/assets/images/tedu_logo.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

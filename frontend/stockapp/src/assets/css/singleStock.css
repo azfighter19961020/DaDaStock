@@ -1,0 +1,61 @@
+#app{
+	font-family: Microsoft YaHei;
+}
+
+
+.header{
+	width:100%;
+	height:110px;
+	background-color:#FFFFFF;
+}
+.footer{
+	width:100%;
+	height:150px;
+	background-color:#888888;
+}
+.content{
+	width:1024px;
+	margin:0 auto;
+	
+}
+
+.bg-light{
+	background-color: #FFFFFF !important;
+}
+
+
+.navbar{
+	padding:0px;
+}
+
+.nav{
+	height: 100px;
+}
+
+.fix{
+	width:500px;
+	max-width: 100%;
+}
+
+.headerfix{
+	background-color: #FFFFFF !important;
+	max-width: 100%;
+}
+
+
+.chartarea{
+	width:800px !important;
+	height:400px !important;
+}
+
+.information{
+	width:800px !important;
+	height:300px !important;
+	margin-top:20px;
+}
+
+.stockdata{
+	width:950px;
+	height:600px;
+	overflow:scroll;
+}

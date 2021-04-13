@@ -1,0 +1,68 @@
+.header{
+	width:1920px;
+	height:110px;
+	background-color:#FFFFFF;
+}
+.footer{
+	width:1920px;
+	height:150px;
+	background-color:#888888;
+}
+.content{
+	width:1024px;
+	margin:0 auto;
+}
+
+.bg-light{
+	background-color: #FFFFFF !important;
+}
+
+.fix{
+	width:500px;
+	max-width: 100%;
+}
+
+.headerfix{
+	background-color: #FFFFFF !important;
+	max-width: 100%;
+}
+
+.navbar{
+	padding:0px;
+}
+
+.nav{
+	height: 100px;
+}
+
+.chartContainer{
+	width:600px !important;
+	height:500px !important;
+}
+
+.stockInformation{
+	width:300px !important;
+	height:500px !important;
+	/*background-color: aqua;*/
+}
+
+.news{
+	width:450px;
+	height:300px;
+	margin:20px;
+}
+
+.otherChartContainer{
+	width:450px;
+	height:300px;
+	margin:20px;
+}
+
+.snews{
+	width:100%;
+	margin:10px;
+}
+
+.news{
+	border:3px dashed #CCCCFF;
+}
