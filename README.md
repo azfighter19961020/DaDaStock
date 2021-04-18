@@ -25,5 +25,5 @@
 
 <p>使用npm run serve運行</p>
 
-<p><a href="http://3.143.234.103/stockapp">前往網站</a></p>
+<p><a href="http://3.21.154.195/stockapp">前往網站</a></p>
 
