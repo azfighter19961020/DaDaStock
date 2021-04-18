@@ -11,7 +11,7 @@
             </div>
             <div class="col navbar">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <a class="navbar-brand" href="/">
+                    <a class="navbar-brand" href="/stockapp/#/">
                         <img src="@/assets/images/logo_small.png" alt="">
                     </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,22 +27,22 @@
                                 </li>
                             </div>
                             <div class="log" v-if="!isLogin">
-                                <a class="nav-item nav-link active" href="/#/login">登入</a>
+                                <a class="nav-item nav-link active" href="/stockapp/#/login">登入</a>
                             </div>
                             <div class="log" v-if="isLogin">
                                 <a class="nav-item nav-link" @click="logout()">登出</a>
                             </div>
                             <div class="log" v-if="!isLogin">
-                                <a class="nav-item nav-link" href="/#/register">註冊</a>
+                                <a class="nav-item nav-link" href="/stockapp/#/register">註冊</a>
                             </div>
                             <div class="log" v-if="isLogin">
-                                <a class="nav-item nav-link" href="/#/self">個人資訊</a>
+                                <a class="nav-item nav-link" href="/stockapp/#/self">個人資訊</a>
                             </div>
                             <div class="log" v-if="isLogin">
-                                <a class="nav-item nav-link" href="/#/order">下單</a>
+                                <a class="nav-item nav-link" href="/stockapp/#/order">下單</a>
                             </div>
                             <div class="log">
-                                <a class="nav-item nav-link" href="/#/documentation" target="_blank">API文檔</a>
+                                <a class="nav-item nav-link" href="/stockapp/#/documentation" target="_blank">API文檔</a>
                             </div>
                             <div class="form-inline my-2 my-lg-0">
                                 <input class="form-control mr-sm-2" type="search" placeholder="輸入股票代號搜尋" aria-label="Search" id="stockno">
@@ -257,7 +257,7 @@
                         <th>{{(data.price * data.amount).toLocaleString()}}</th>
                         <th>{{data.nowPrice.toLocaleString()}}</th>
                         <th><span :style="data.unRealize > 0 ? {color:'red'} : {color:'green'}">{{(data.unRealize).toLocaleString()}}</span></th>
-                        <th><a :href="'/#/order/'+data.stockno"><button class="btn btn-primary" style="width:150px">下單</button></a></th>
+                        <th><a :href="'/stockapp/#/order/'+data.stockno"><button class="btn btn-primary" style="width:150px">下單</button></a></th>
                     </tr>
                 </tbody>
             </table>

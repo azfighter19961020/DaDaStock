@@ -28,13 +28,12 @@
           window.location.reload()
         },
         renderOrderPage(){
-          window.location.href = "/#/order/" + this.stockno
+          window.location.href = "/stockapp/#/order/" + this.stockno
         },
         toSearch(){
           let stockno = document.getElementById('stockno').value
-          console.log(stockno)
           if(!stockno){return}
-          window.location.href = `/#/stock/${stockno}`
+          window.location.href = `/stockapp/#/stock/${stockno}`
           window.location.reload()
         }
       },

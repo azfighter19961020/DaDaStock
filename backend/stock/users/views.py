@@ -43,10 +43,9 @@ def users(request,username = None):
 		regex = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
 		data = request.body
 		jsondata = json.loads(data)
-		print(jsondata)
 		pdata = User.objects.filter(username = jsondata["username"])
 		if pdata:
-			return JsonResponse({'status':400,'error':"使用者名稱重複!"})
+			return JsonResponse({'status':400,"error":"使用者名稱重複!"})
 		if [i for i in string.punctuation if i in jsondata["username"]]:
 			return JsonResponse({'status':400,"error":"使用者名稱含特殊字元!"})
 		if not re.search(regex,jsondata["email"]):

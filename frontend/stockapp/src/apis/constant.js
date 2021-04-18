@@ -1,7 +1,7 @@
 export function host(){
-  return "127.0.0.1"
+  return "3.21.154.195"
 }
 
 export function port(){
-  return "8000"
+  return "81"
 }

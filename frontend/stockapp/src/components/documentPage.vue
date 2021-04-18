@@ -32,14 +32,12 @@
         }
       },
       scrollToCharacter(event){
-        console.log("into onclick") 
         var id = event.currentTarget.getAttribute('data-target')
         document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'center' })
         var elements = document.getElementsByClassName("scroll-to-link")
         var currentelement = event.currentTarget.parentElement
         for(var i=0;i<elements.length;i++){
           if(elements[i]!=currentelement){
-            console.log("into if")
             elements[i].className = "scroll-to-link"
           }
           else{

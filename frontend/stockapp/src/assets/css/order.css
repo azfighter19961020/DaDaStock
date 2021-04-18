@@ -103,9 +103,15 @@
 
 
 
-.orderButton, .tradeTypeButton, .tradeCategoryButton, .takePriceButton, .pendingTypeButton, .tradeTypeSecondButton{
+.orderButton, .tradeTypeButton, .tradeCategoryButton, .pendingTypeButton, .tradeTypeSecondButton{
 	width: 250px;
 	height: 70px;
+	margin:0 15px 0 15px;
+}
+
+.takePriceButton{
+	width: 150px;
+	height:70px;
 	margin:0 15px 0 15px;
 }
 

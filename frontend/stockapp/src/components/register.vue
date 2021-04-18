@@ -27,7 +27,7 @@
       toSearch(){
         let stockno = document.getElementById('stockno').value
         if(!stockno){return}
-          window.location.href = `http://localhost:8080/#/stock/${stockno}`
+          window.location.href = `/stockapp/#/stock/${stockno}`
       },
       logout(){
         window.localStorage.removeItem("token")
@@ -92,7 +92,6 @@
         if(!this.isValid){
           return
         }
-        console.log("valid")
         let data = {
           'username':username,
           'password':pwd1,
@@ -102,14 +101,13 @@
         }
         register(data).then(
           (response) => {
-            if(response.status == 200){
+            if(response.data.status == 200){
               login(response.data.data).then(
                 (response) => {
                   if(response.data.status == 200){
-                    console.log("into if")
                     window.localStorage.setItem("username",response.data.data.username)
                     window.localStorage.setItem("token",response.data.data.token)
-                    window.location.href = "/"
+                    window.location.href = "/stockapp"
                   }
                   else{
                     alert(response.data.error)
@@ -118,7 +116,7 @@
               )
             }
             else{
-              alert(response.error)
+              alert(response.data.error)
             }
           }
         )

@@ -12,8 +12,9 @@ from inventory.models import Inventory
 import datetime
 from tools.method_check import methodCheck
 import math
-# Create your views here.
+from pytz import timezone
 
+# Create your views here.
 @logincheck("GET")
 @methodCheck("POST","PUT","GET")
 def order(request,orderno = None):
@@ -35,6 +36,7 @@ def order(request,orderno = None):
 		userorder = Order.objects.filter(user = userdata)
 		data = []
 		for order in userorder:
+			print(order.date)
 			data.append({
 				'orderno':order.orderno,
 				'stockno':order.stockno,
@@ -148,7 +150,7 @@ def order(request,orderno = None):
 			tradeCategoryParam = ["Cash","marginTrading","ShortSelling"]
 			pendingTypeParam = ["ROD","IOC","FOK"]
 			orderTypeParam = ["Buy","Sell"]
-			takePriceParam = ["LimitDown","LimitUp","Unchanged"]
+			takePriceParam = ["LimitDown","LimitUp","Unchanged","Current"]
 			if jsondata["tradeType"] not in tradeTypeParam:
 				return JsonResponse({"status":703,"error":"交易類型錯誤! 參數不存在"})
 			if jsondata["tradeCategory"] not in tradeCategoryParam:
@@ -172,7 +174,9 @@ def order(request,orderno = None):
 			if (float(userprice) > limitUp + 1) or (float(userprice) < limitDown - 1):
 				return JsonResponse({"status":704,"error":"價格錯誤! 價格應不超過漲跌幅10%"})
 
-			hour = datetime.datetime.now().hour >= 13
+			hour = (datetime.datetime.now().astimezone(timezone("Asia/Taipei")).hour >= 13) or (datetime.datetime.now().astimezone(timezone("Asia/Taipei")).hour < 9)
+			print(datetime.datetime.now().astimezone(timezone("Asia/Taipei")).hour)
+			print("hour is:",hour)
 
 			"""
 				判斷參數合理性 -- FOR API
@@ -186,8 +190,9 @@ def order(request,orderno = None):
 			if jsondata["tradeType"] == "Fixing" or \
 				jsondata["tradeType"] == "Odd" or  \
 				jsondata["tradeType"] == "IntradayOdd":
-				if (jsondata["takeprice"] != "Unchanged") and (not hour):
-					return JsonResponse({"status":704,"error":"取價參數錯誤!參數應為Unchanged,傳入參數為{}".format(jsondata["takeprice"])})
+				if (jsondata["takeprice"] != "Unchanged"):
+					if not hour:
+						return JsonResponse({"status":704,"error":"取價參數錯誤!參數應為Unchanged,傳入參數為{}".format(jsondata["takeprice"])})
 				if jsondata["tradeCategory"] != "Cash":
 					return JsonResponse({"status":704,"error":"交易種類錯誤!參數應為Cash,傳入參數為{}".format(jsondata["tradeCategory"])})
 				if jsondata["pendingType"] != "ROD":
@@ -206,21 +211,30 @@ def order(request,orderno = None):
 
 			orderno = str(uuid.uuid4()).split("-")[0]
 
+
+			if jsondata["takeprice"] == "LimitDown":
+				userprice = limitDown
+			elif jsondata["takeprice"] == "LimitUp":
+				userprice = limitUp
+			elif jsondata["takeprice"] == "Unchanged":
+				userprice = closeprice
 			"""
 				order : 初始狀態都為預約委託狀態
 				另創API 每10分鐘call一次
 				根據價格決定是否交易成功
 				過10:00PM尚未成交交易一律取消委託
 			"""
+			print(datetime.datetime.now().astimezone(timezone("Asia/Taipei")))
 			state = "預約委託"
 			order = Order.objects.create(
 				orderno = orderno,
 				stockno = jsondata["stockno"],
+				date = datetime.datetime.now().astimezone(timezone("Asia/Taipei")),
 				stockinf = stockinfdata,
 				user = userdata,
 				amount = int(jsondata["amount"]),
 				orderType = jsondata["orderType"],
-				price = float(jsondata["price"]),
+				price = userprice,
 				tradeCategory = jsondata["tradeCategory"],
 				tradeType = jsondata["tradeType"],
 				takeprice = jsondata["takeprice"],
@@ -234,7 +248,7 @@ def order(request,orderno = None):
 				"stockname":stockinfdata.stockname,
 				"amount":jsondata["amount"],
 				"orderType":jsondata["orderType"],
-				"price":jsondata["price"],
+				"price":userprice,
 				"tradeCategory":jsondata["tradeCategory"],
 				"tradeType":jsondata["tradeType"],
 				"takeprice":jsondata["takeprice"],
@@ -303,7 +317,7 @@ def scanOrder(request):
 			jsondata["token"] != "1cbbc29a-cebe-4c84-a813-278cf7f68c3e":
 		return JsonResponse({"status":400,"error":"not super user"})
 	orderdata = Order.objects.all()
-	isClose = datetime.datetime.now().strftime('%H:%m') == "22:00" 
+	isClose = datetime.datetime.now().astimezone(timezone("Asia/Taipei")).strftime('%H:%m') == "22:00" 
 	if isClose:
 		for order in orderdata:
 			if order.state == "預約委託":

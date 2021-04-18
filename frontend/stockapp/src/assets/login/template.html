@@ -24,22 +24,22 @@
                                 </li>
                             </div>
                             <div class="log" v-if="!isLogin">
-                                <a class="nav-item nav-link active" href="/#/login">登入</a>
+                                <a class="nav-item nav-link active" href="/stockapp/#/login">登入</a>
                             </div>
                             <div class="log" v-if="isLogin">
                                 <a class="nav-item nav-link" @click="logout()">登出</a>
                             </div>
                             <div class="log" v-if="!isLogin">
-                                <a class="nav-item nav-link" href="/#/register">註冊</a>
+                                <a class="nav-item nav-link" href="/stockapp/#/register">註冊</a>
                             </div>
                             <div class="log" v-if="isLogin">
-                                <a class="nav-item nav-link" href="/#/self">個人資訊</a>
+                                <a class="nav-item nav-link" href="/stockapp/#/self">個人資訊</a>
                             </div>
                             <div class="log" v-if="isLogin">
-                                <a class="nav-item nav-link" href="/#/order">下單</a>
+                                <a class="nav-item nav-link" href="/stockapp/#/order">下單</a>
                             </div>
                             <div class="log">
-                                <a class="nav-item nav-link" href="/#/documentation" target="_blank">API文檔</a>
+                                <a class="nav-item nav-link" href="/stockapp/#/documentation" target="_blank">API文檔</a>
                             </div>
                             <div class="form-inline my-2 my-lg-0">
                                 <input class="form-control mr-sm-2" type="search" placeholder="輸入股票代號搜尋" aria-label="Search" id="stockno">
@@ -60,7 +60,7 @@
                     <h4><strong>重要訊息</strong></h4>
                     <p><span style="color: #ff0000;"><strong>token只可產生一次(於註冊時產生)</strong></span></p>
                     <p><span style="color: #ff0000;"><strong>請妥善保管token</strong></span></p>
-                    <p><a href="/#/documentation" target="_blank">按此前往API文檔&gt;&gt;</a></p>
+                    <p><a href="/stockapp/#/documentation" target="_blank">按此前往API文檔&gt;&gt;</a></p>
                 </div>
             </div>
             <div class="col loginForm login" style="padding-top:100px;">
@@ -80,8 +80,7 @@
                         {{passwordErrMsg}}
                     </div>
                     <div class="form-group">
-                        <a href="#">忘記密碼?</a>
-                        <a href="/#/register">前往註冊</a>
+                        <a href="/stockapp/#/register">前往註冊</a>
                     </div>
                     <button type="submit" class="btn btn-primary" @click="flogin()">登入</button>
                 </form>

@@ -20,7 +20,7 @@
       toSearch(){
         let stockno = document.getElementById('stockno').value
         if(!stockno){return}
-          window.location.href = `http://localhost:8080/#/stock/${stockno}`
+          window.location.href = `/stockapp/#/stock/${stockno}`
       },
       flogin(){
         this.usernameErrMsg = this.passwordErrMsg = ''
@@ -46,7 +46,7 @@
               window.localStorage.setItem('token',response.data.data.token)
               this.isLogin = true
               this.username = response.data.data.username
-              window.location.href = '/'
+              window.location.href = '/stockapp'
             }
             else{
               alert(response.data.error)

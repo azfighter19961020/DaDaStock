@@ -34,20 +34,20 @@
       logout(){
         window.localStorage.removeItem("username")
         window.localStorage.removeItem("token")
-        window.location.href = '/#/login'
+        window.location.href = '/stockapp/#/login'
       },
       toSearch(){
         let stockno = document.getElementById('stockno').value
         if(!stockno){return}
-          window.location.href = `/#/stock/${stockno}`
+          window.location.href = `/stockapp/#/stock/${stockno}`
       },
       toStore(){
         if(this.storeText == ""){
           alert("儲值金額不為空!")
           return
         }
-        if(parseInt(this.storeText) > Math.pow(10,10)){
-          alert("金額超出限制!")
+        if(parseInt(this.storeText) > Math.pow(10,5)){
+          alert("金額超出限制!請勿超過100000!")
           this.storeText = ""
           return
         }
@@ -198,7 +198,6 @@
       let [ruserdata,rorderdata,rinventorydata] = await Promise.all([getUserData(username,token),getOrder(data,token),getInventory(token,data)])
       let userdata = ruserdata.data.data
       let orderdata = rorderdata.data.data
-      console.log(rinventorydata)
       let inventoryData = rinventorydata.data.data
       this.userdata = userdata
       this.orderdata = orderdata
@@ -207,7 +206,6 @@
       this.secretToken = userdata.secretToken
       this.balance = userdata.balance
       let user = document.getElementById("username")
-      console.log(user)
       let email = document.getElementById("email")
       let phone = document.getElementById("phone")
       let address = document.getElementById("address")

@@ -24,7 +24,7 @@
       },
       methods:{
         toOrder(){
-          window.location.href=`/#/order/${this.randomStockNo}`
+          window.location.href=`/stockapp/#/order/${this.randomStockNo}`
         },
         logout(){
           window.localStorage.removeItem("username")
@@ -33,9 +33,8 @@
         },
         toSearch(){
           let stockno = document.getElementById('stockno').value
-          console.log(stockno)
           if(!stockno){return}
-          window.location.href = `/#/stock/${stockno}`
+          window.location.href = `/stockapp/#/stock/${stockno}`
         }
       },
       async mounted(){
@@ -55,7 +54,7 @@
               HotStock: ${stockinf.stockname}
           </h2>
           ${stockinf.companyInf}
-          <img src="http://localhost:8000/media/${stockinf.logo}" alt="" style="height:30%">
+          <img src="http://3.21.154.195:81/media/${stockinf.logo}" alt="" style="height:30%">
         `
         this.randomStockNo = stockinf.stockid
         let tsedata = TSEapiResponse.data.data
@@ -92,7 +91,7 @@
         //             HotStock: ${stockinf.stockname}
         //         </h2>
         //         ${stockinf.companyInf}
-        //         <img src="http://localhost:8000/media/${stockinf.logo}" alt="" style="height:30%">
+        //         <img src="http://3.21.154.195:81/media/${stockinf.logo}" alt="" style="height:30%">
         //       `
         //       this.randomStockNo = stockinf.stockid
         //       TSEapi().then(

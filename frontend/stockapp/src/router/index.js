@@ -10,8 +10,7 @@ import documentPage from '@/components/documentPage.vue'
 
 Vue.use(Router)
 
-var router =  new Router({
-  routes:[
+const routes = [
     {
       path:'/',
       name:'index',
@@ -52,7 +51,11 @@ var router =  new Router({
       name:'documentPage',
       component:documentPage
     }
-  ]
+]
+
+var router =  new Router({
+  base: '/stockapp',
+  routes
 })
 
 

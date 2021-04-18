@@ -28,6 +28,7 @@
         overtime:false,
         overtimeMsg:'',
         priceErrorMsg:'',
+        userprice:''
       }
     },
     components: {
@@ -51,8 +52,9 @@
               this.LimitUp = this.closepriceNear * 1.1
               this.Unchanged = this.closepriceNear
               this.stockname = response.data.stockname
-              let price = document.getElementById("price")
-              price.value = (this.closepriceNear).toFixed(2)
+              //let price = document.getElementById("price")
+              //price.value = (this.closepriceNear).toFixed(2)
+              this.userprice = (this.closepriceNear).toFixed(2)
             }
             else{
               alert(response.data.error)
@@ -75,14 +77,14 @@
           (response) => {
             if(response.data.status == 200){
               this.stockno = response.data.stockno
-              console.log(this.stockno)
               this.closepriceNear = response.data.data.closeprice
               this.LimitDown = (this.closepriceNear * 0.9).toFixed(2)
               this.LimitUp = (this.closepriceNear * 1.1).toFixed(2)
               this.Unchanged = this.closepriceNear
               this.stockname = response.data.stockname
-              let price = document.getElementById("price")
-              price.value = (this.closepriceNear).toFixed(2)
+              //let price = document.getElementById("price")
+              //price.value = (this.closepriceNear).toFixed(2)
+              this.userprice = (this.closepriceNear).toFixed(2)
               this.isLoading = false
             }
             else{
@@ -91,6 +93,59 @@
             }
           }
         )
+        }
+      },
+      userprice: {
+        handler: function(){
+          let elements = document.getElementsByClassName("takePriceButton")
+          var i = 0
+          if(parseFloat(this.userprice) != parseFloat(this.LimitUp) && parseFloat(this.userprice) != parseFloat(this.LimitDown) && parseFloat(this.userprice) != parseFloat(this.closepriceNear)){
+            this.takeprice = "Current"
+            for(i=0;i<elements.length;i++){
+              if(elements[i].id == "Current"){
+                elements[i].className = "btn btn-primary takePriceButton"
+              }
+              else{
+                elements[i].className = "btn btn-outline-primary takePriceButton"
+              }
+            }
+          }
+          else if(parseFloat(this.userprice) == parseFloat(this.LimitUp)){
+            this.takeprice = "LimitUp"
+            for(i=0;i<elements.length;i++){
+              if(elements[i].id == "LimitUp"){
+                elements[i].className = "btn btn-primary takePriceButton"
+              }
+              else{
+                elements[i].className = "btn btn-outline-primary takePriceButton"
+              }
+            }          
+          }
+          else if(parseFloat(this.userprice) == parseFloat(this.LimitDown)){
+            this.takeprice = "LimitDown"
+            for(i=0;i<elements.length;i++){
+              if(elements[i].id == "LimitDown"){
+                elements[i].className = "btn btn-primary takePriceButton"
+              }
+              else{
+                elements[i].className = "btn btn-outline-primary takePriceButton"
+              }
+            }
+          }
+          else if(parseFloat(this.userprice) == parseFloat(this.closepriceNear)){
+            if(this.overtime){
+              return
+            }
+            this.takeprice = "Unchanged"
+            for(i=0;i<elements.length;i++){
+              if(elements[i].id == "Unchanged"){
+                elements[i].className = "btn btn-primary takePriceButton"
+              }
+              else{
+                elements[i].className = "btn btn-outline-primary takePriceButton"
+              }
+            }
+          }
         }
       }
     },
@@ -124,7 +179,7 @@
       toSearch(){
         let stockno = document.getElementById('stockno').value
         if(!stockno){return}
-          window.location.href = `/#/stock/${stockno}`
+          window.location.href = `/stockapp/#/stock/${stockno}`
       },
       amountProcess(type){
         let amount = document.getElementById("amount")
@@ -143,7 +198,7 @@
       logout(){
         window.localStorage.removeItem("username")
         window.localStorage.removeItem("token")
-        window.location.href = "/#/login"
+        window.location.href = "/stockapp/#/login"
       },
       submitOrder(){
         let tradeType = this.tradeType
@@ -151,9 +206,7 @@
         let orderType = this.orderType
         let amount = document.getElementById("amount").value
         let price = document.getElementById("price").value
-        console.log(this.LimitUp)
-        console.log(this.LimitDown)
-        if(price > this.LimitUp || price < this.LimitDown){
+        if(price > parseFloat(this.LimitUp) || price < parseFloat(this.LimitDown)){
           this.priceErrorMsg = "取價錯誤，漲跌幅不可超過±10%"
           return
         }
@@ -165,6 +218,9 @@
         let stockno = this.stockno
         let pendingType = this.pendingType
         let isAPI = false
+        if(price != this.LimitUp || price != this.LimitDown){
+          takeprice = "Current"
+        }
         let data = {
           "tradeType":tradeType,
           "tradeCategory":tradeCategory,
@@ -180,7 +236,7 @@
         createOrder(data).then(
           (response) => {
             if(response.data.status == 200){
-              window.location.href = "/#/self"
+              window.location.href = "/stockapp/#/self"
             }
             else{
               alert(response.data.error)

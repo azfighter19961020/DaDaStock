@@ -47,18 +47,18 @@
                 <pre v-highlightjs>
                   <h4>On Windows 7 / 8 / 10</h4>
                   <code class="bash">
-                    $ pip install dada_stock
+                    $ pip install dadastockapi
                   </code>
                   <h4>On Linux</h4>
                   <code class="bash">
-                    $ pip3 install dada_stock
+                    $ pip3 install dadastockapi
                   </code>
                   <h4>Attention! You can only use this API on python 3.7 or higher</h4>
                   <h4>Python2 is deprecated</h4>
                   <h4>And you can instantiate API class with the code below</h4>
                   <code class="python">
-                    import stockApi
-                    api = stockApi()
+                      from dadastock import stockAPI
+                      api = stockAPI.stockApi()
                   </code>
                 </pre>
                 <p>
@@ -70,6 +70,7 @@
                 <p>
                     After install this API, you can import this API class and start to use it.
                 </p>
+                <p>You can take a look: <a href="https://pypi.org/project/dadastockapi/" target="_blank">Click here</a></p>
             </div>
             <div class="overflow-hidden content-section" id="content-Login">
                 <h2 id="Login">Login</h2>
@@ -200,6 +201,10 @@ result = api.createOrder(stockno = "1435", \
                   <tr>
                     <td>Unchanged</td>
                     <td>Take price constant variable,set price with market price.</td>
+                  </tr>
+                  <tr>
+                    <td>Current</td>
+                    <td>Custom price by yourself. can not over price ±10%.</td>
                   </tr>
                 </tbody>
               </table>

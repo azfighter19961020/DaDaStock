@@ -72,18 +72,17 @@ def stock(request,stockno = None,startDate = None,endDate = None,requestType = N
 		stockdata = Stock.objects.filter(stockid = stockno)
 		if not stockdata:
 			return JsonResponse({'status':400,'error':'stock data not found'})
-		sd = datetime.datetime.strptime('{}/{}/{}'.format(startDate[0:4],startDate[4:6],startDate[6:]),'%Y/%m/%d')
-		ed = datetime.datetime.strptime('{}/{}/{}'.format(endDate[0:4],endDate[4:6],endDate[6:]),'%Y/%m/%d')
-
+		sd = datetime.datetime.strptime(startDate,"%Y-%m-%d")
+		ed = datetime.datetime.strptime(endDate,"%Y-%m-%d")
 		data = []
 		stockinf = Stockinf.objects.filter(stockid = stockno)
 		stockinf = stockinf[0]
 		for s in stockdata:
-			if  datetime.datetime.timestamp(sd) <  datetime.datetime.timestamp(s.date) <  datetime.datetime.timestamp(ed):
+			if  datetime.datetime.timestamp(sd) <=  datetime.datetime.timestamp(s.date) <=  datetime.datetime.timestamp(ed) + (24*3600):
 				data.append([
 					stockno,
 					stockinf.stockname,
-					str(s.date.strftime("%Y/%m/%d")),
+					str(s.date),
 					s.openprice,
 					s.closeprice,
 					s.lowprice,
