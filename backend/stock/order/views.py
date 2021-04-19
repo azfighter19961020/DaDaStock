@@ -314,7 +314,7 @@ def scanOrder(request):
 	print(data)
 	jsondata = json.loads(data)
 	if jsondata["user"] != "charlieda" or \
-			jsondata["token"] != "1cbbc29a-cebe-4c84-a813-278cf7f68c3e":
+			jsondata["token"] != "":
 		return JsonResponse({"status":400,"error":"not super user"})
 	orderdata = Order.objects.all()
 	isClose = datetime.datetime.now().astimezone(timezone("Asia/Taipei")).strftime('%H:%m') == "22:00" 
