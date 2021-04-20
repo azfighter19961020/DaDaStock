@@ -72,6 +72,8 @@ def stock(request,stockno = None,startDate = None,endDate = None,requestType = N
 		stockdata = Stock.objects.filter(stockid = stockno)
 		if not stockdata:
 			return JsonResponse({'status':400,'error':'stock data not found'})
+		if (len(startDate.split("-")) != 3) or (len(endDate.split("-")) != 3):
+			return JsonResponse({"status":400,"error":"date not well-formed"})
 		sd = datetime.datetime.strptime(startDate,"%Y-%m-%d")
 		ed = datetime.datetime.strptime(endDate,"%Y-%m-%d")
 		data = []

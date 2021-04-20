@@ -99,7 +99,7 @@
         handler: function(){
           let elements = document.getElementsByClassName("takePriceButton")
           var i = 0
-          if(parseFloat(this.userprice) != parseFloat(this.LimitUp) && parseFloat(this.userprice) != parseFloat(this.LimitDown) && parseFloat(this.userprice) != parseFloat(this.closepriceNear)){
+          if((parseFloat(this.userprice) != parseFloat(this.LimitUp)) && (parseFloat(this.userprice) != parseFloat(this.LimitDown)) && (parseFloat(this.userprice) != parseFloat(this.closepriceNear))){
             this.takeprice = "Current"
             for(i=0;i<elements.length;i++){
               if(elements[i].id == "Current"){
@@ -205,7 +205,7 @@
         let tradeCategory = this.tradeCategory
         let orderType = this.orderType
         let amount = document.getElementById("amount").value
-        let price = document.getElementById("price").value
+        let price = this.userprice
         if(price > parseFloat(this.LimitUp) || price < parseFloat(this.LimitDown)){
           this.priceErrorMsg = "取價錯誤，漲跌幅不可超過±10%"
           return
@@ -218,9 +218,6 @@
         let stockno = this.stockno
         let pendingType = this.pendingType
         let isAPI = false
-        if(price != this.LimitUp || price != this.LimitDown){
-          takeprice = "Current"
-        }
         let data = {
           "tradeType":tradeType,
           "tradeCategory":tradeCategory,
@@ -404,18 +401,17 @@
         }
       },
       changeTakePrice(param){
-        this.takeprice = param
         let elements = document.getElementsByClassName("takePriceButton")
-        let price = document.getElementById("price")
         for(var i=0;i<elements.length;i++){
           if(elements[i].id == param){
-            price.value = eval(`(this.${elements[i].id})`)
+            this.userprice = eval(`(this.${elements[i].id})`)
             elements[i].className = "btn btn-primary takePriceButton"
           }
           else{
             elements[i].className = "btn btn-outline-primary takePriceButton"
           }
         }
+        this.takeprice = param
       }
     }
   }

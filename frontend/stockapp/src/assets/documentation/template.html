@@ -4,7 +4,7 @@
 <div id="app">
     <div class="left-menu">
         <div class="content-logo">
-            <img src="@/assets/images/logo_small.png" height="32" />
+            <a href="/stockapp/#/"><img src="@/assets/images/logo_small.png" height="32" /></a>
             <span>DaDa Stock API Documentation</span>
         </div>
         <div class="content-menu">
@@ -26,6 +26,9 @@
                 </li>
                 <li class="scroll-to-link">
                     <a @click="scrollToCharacter($event)" data-target="OrderOperation" class="scrolla">Order Operation</a>
+                </li>
+                <li>
+                  <a @click="scrollToCharacter($event)" data-target="checkOrder" class="scrolla">Check Order Operation</a>
                 </li>
                 <li class="scroll-to-link">
                     <a @click="scrollToCharacter($event)" data-target="Inventory" class="scrolla">Check Inventory</a>
@@ -113,8 +116,8 @@ secretToken = "Your secret Token",
 """
 example code for api.constant
 """
-import stockApi
-api = stockApi()
+from dadastock import stockAPI
+api = stockAPI.stockApi()
 loginResult = api.login(
 secretClientId = "Your secrect Client Id",
 secretToken = "Your secret Token",
@@ -134,7 +137,7 @@ result = api.createOrder(stockno = "1435", \
               <p>You can access them after instantiate API class and use <span style="font-weight:bold;">api.constant</span>.</p>
               <p>There is a sample code at right side.</p>
               <p>And the table of constant variables have been showed below.</p>
-              <table style="margin:0 50px;">
+              <table style="margin:0 50px;border: 1px #cccccc solid;">
                 <thead>
                   <tr>
                     <th>Const</th>
@@ -216,7 +219,7 @@ result = api.createOrder(stockno = "1435", \
 """
 stock data is return as Tick class
 """
-api = stockApi()
+api = stockAPI.stockApi()
 data = api.stockdata("1455")
 print(data)
 """
@@ -268,7 +271,7 @@ result:
 """
 Kbar data is return as DataFrame
 """
-api = stockApi() 
+api = stockAPI.stockApi()
 """
 the arguments are stockno / startDate / endDate.
 """
@@ -314,7 +317,7 @@ instantiate API class and login,
 order operation needs login, if you don't login,
 API will raise exception.
 """
-api = stockApi()
+api = stockAPI.stockApi()
 loginResult = api.login(
   secretClientId = "Your secret client Id",
   secretToken = "Your secret token",
@@ -352,33 +355,7 @@ result:
 """
 
 """
-you can check order by passing orderno,
-or cancel order by Trade class.
-"""
-check = api.checkOrder(result.orderno)
-print(check)
-"""
-result:
-
-check order also returns trade class,
-{
-        orderno:d854184e,
-        stockno:1435,
-        stockname:中福,
-        amount:1000,
-        orderType:Buy,
-        price:24.0,
-        tradeCategory:Cash,
-        tradeType:Common,
-        takeprice:Unchanged,
-        pendingType:ROD,
-        state:預約委託,
-
-}
-"""
-
-"""
-Or you can modify Order by passing orderno,modify field and modify value
+You can modify Order by passing orderno,modify field and modify value
 """
 modifyResult = api.modifyOrder(result,"price",21)
 print(modifyResult)
@@ -450,6 +427,66 @@ cancel order returns trade class:
             <p>also if you miss one or more arguments,</p>
             <p>a Python native exception <span style="font-weight: bold;">TypeError</span> will be raised.</p>
             </div>
+            <div class="overflow-hidden content-section" id="content-checkOrder">
+              <pre v-highlightjs>
+                <br>
+                <br>
+                <br>
+                <code class="python">
+
+"""
+you can check order by passing orderno,
+or cancel order by Trade class.
+"""
+check = api.checkOrder(result.orderno)
+print(check)
+"""
+result:
+
+check order also returns trade class,
+{
+        orderno:d854184e,
+        stockno:1435,
+        stockname:中福,
+        amount:1000,
+        orderType:Buy,
+        price:24.0,
+        tradeCategory:Cash,
+        tradeType:Common,
+        takeprice:Unchanged,
+        pendingType:ROD,
+        state:預約委託,
+
+}
+"""
+
+"""
+Or check all order by using checkAllOrder method
+"""
+for order in api.checkAllOrder():
+  print(order)
+
+"""
+Using checkOrderByDate method to check specify day trade
+"""
+for order in api.checkOrderByDate():
+  print(order)
+
+"""
+Or check order by interval
+"""
+for order in api.checkOrderByInterval("2021-03-24","2021-03-26"):
+  print(order)
+                  
+                </code>
+              </pre>
+              <h2 id="checkOrder">Check Order Operation</h2>
+              <p>This stockAPI has three check order methods,</p>
+              <p>using checkOrder method to check order by orderno,</p>
+              <p>using checkAllOrder method to check all order,</p>
+              <p>or using checkOrderByInterval to check order by one interval.</p>
+              <p>Before using these method,you <span style="color:red;font-weight: bold;">must</span> login.</p>
+            </div>
             <div class="overflow-hidden content-section" id="content-Inventory">
               <pre v-highlightjs>
                 <br>
@@ -460,7 +497,7 @@ cancel order returns trade class:
 """
 you must login for taking inventory data
 """
-api = stockApi()
+api = stockAPI.stockApi()
 loginResult = api.login(
   secretClientId = "Your secret client Id",
   secretToken = "Your secret token",
@@ -525,8 +562,8 @@ example result:
                 <br>
                 <br>
                 <code class="python">
-import stockApi
-api = stockApi()
+from dadastock import stockAPI
+api = stockAPI.stockApi()
 loginResult = api.login(
   secretClientId = "Your secret client id",
   secretToken = "Your secret token",
@@ -554,8 +591,8 @@ result:
 """
 use toDict method
 """
-import stockApi
-api = stockApi()
+from dadastock import stockAPI
+api = stockAPI.stockApi()
 print(pd.DataFrame(api.stockdata("1455").toDict()))
 """
 result:

@@ -68,10 +68,19 @@ def inventoryAPIView(request):
 	returndata = []
 	for inventoryRecord in inventoryData:
 		stockinfdata = Stockinf.objects.filter(stockid = inventoryRecord.stockno)
+		stockdata = Stock.objects.raw('SELECT * FROM stock WHERE stockid=%s ORDER BY ABS(DATEDIFF(date,NOW())) LIMIT 1;'%inventoryRecord.stockno)
+		if not stockdata:
+			continue
+		nearTodayData = stockdata[0]
+		inventoryTotalPrice = inventoryRecord.amount * inventoryRecord.price
+		nowPrice = nearTodayData.closeprice * inventoryRecord.amount
+		unRealize = nowPrice - (inventoryTotalPrice * (0.1425 / 100)) - (inventoryTotalPrice * (0.3 / 100)) - inventoryTotalPrice
 		returndata.append({
 			"stockno":inventoryRecord.stockno,
 			"stockname":stockinfdata[0].stockname,
 			"amount":inventoryRecord.amount,
+			"nowPrice":nowPrice,
+			"unRealize":unRealize,
 			"price":inventoryRecord.price
 		})
 	return JsonResponse({'status':200,"data":returndata})

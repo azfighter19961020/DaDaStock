@@ -209,6 +209,21 @@ def order(request,orderno = None):
 				if jsondata["takeprice"] == "Unchanged":
 					return JsonResponse({"status":704,"error":"限價參數錯誤! 目前為非交易時間，不可使用市價委託"})
 
+
+			"""
+				數量合理性
+				如果tradeType 是Common 或者是Fixing
+				股數應大於1000
+				如果tradeType是Odd 或者是IntradayOdd
+				股數應在1~999
+			"""
+			if jsondata["tradeType"] == "Fixing" or jsondata["tradeType"] == "Common":
+				if int(jsondata["amount"]) < 1000:
+					return JsonResponse({"status":704,"error":"數量參數錯誤! 應為1000以上"})
+			if jsondata["tradeType"] == "Odd" or jsondata["tradeType"] == "IntradayOdd":
+				if int(jsondata["amount"]) >= 1000:
+					return JsonResponse({"status":704,"error":"數量參數錯誤!應為1000以下"})
+
 			orderno = str(uuid.uuid4()).split("-")[0]
 
 
@@ -334,7 +349,7 @@ def scanOrder(request):
 			print(lowprice)
 			highprice = nearTodayData.highprice
 			if order.orderType.lower() == "buy":
-				if order.price >= lowprice or order.takeprice == "LimitDown":
+				if (order.price >= lowprice) or (order.takeprice == "LimitDown"):
 					amount = order.amount
 					price = order.price
 					userdata = order.user
@@ -351,6 +366,7 @@ def scanOrder(request):
 					else:
 						inventoryData = inventoryData[0]
 						inventoryData.amount = inventoryData.amount + amount
+						inventoryData.price = (inventoryData.price + price) / 2
 						inventoryData.save()
 					
 					# 交易手續費
@@ -382,4 +398,108 @@ def scanOrder(request):
 	return JsonResponse({'status':200,"time":datetime.datetime.now(),"message":"scan success"})
 
 
-
+@methodCheck("POST")
+def APIOrder(request,orderno = None,requestDate = None,startDate = None,endDate = None):
+	print("request body:",request.body)
+	jsondata = json.loads(request.body)
+	if "secretClientId" not in jsondata:
+		return JsonResponse({"status":400,"error":"secret client ID not found!"})
+	if "secretToken" not in jsondata:
+		return JsonResponse({"status":400,"error":"secret token not found!"})
+	secretClientId = jsondata["secretClientId"]
+	secretToken = jsondata["secretToken"]
+	userdata = User.objects.filter(secretClientId = secretClientId)
+	if not userdata:
+		return JsonResponse({"status":400,"error":"secret client ID incorrect!"})
+	userdata = userdata[0]
+	if userdata.secretToken != secretToken:
+		return JsonResponse({"status":400,"error":"secret Token incorrect!"})
+	if (not orderno) and (not requestDate) and (not startDate) and (not endDate):
+		orderdata = Order.objects.filter(user = userdata)
+		data = []
+		for o in orderdata:
+			data.append({
+				"date":o.date,
+				"orderno":o.orderno,
+				"stockno":o.stockno,
+				"stockname":o.stockinf.stockname,
+				"amount":o.amount,
+				"orderType":o.orderType,
+				"price":o.price,
+				"tradeCategory":o.tradeCategory,
+				"tradeType":o.tradeType,
+				"takeprice":o.takeprice,
+				"state":o.state,
+				"pendingType":o.pendingType
+			})
+		return JsonResponse({"status":200,"data":data})
+	if orderno:
+		orderdata = Order.objects.filter(user = userdata).filter(orderno = orderno)
+		if not orderdata:
+			return JsonResponse({"status":400,"error":"查無此委託!"})
+		orderdata = orderdata[0]
+		data = {
+			"date":orderdata.date,
+			"orderno":orderdata.orderno,
+			"stockno":orderdata.stockno,
+			"stockname":orderdata.stockinf.stockname,
+			"amount":orderdata.amount,
+			"orderType":orderdata.orderType,
+			"price":orderdata.price,
+			"tradeCategory":orderdata.tradeCategory,
+			"tradeType":orderdata.tradeType,
+			"takeprice":orderdata.takeprice,
+			"state":orderdata.state,
+			"pendingType":orderdata.pendingType
+		}
+		return JsonResponse({"status":200,"data":data})
+	if (not orderno) and (requestDate):
+		print("into requestdate")
+		dates = [int(i) for i in requestDate.split("-")]
+		if len(dates) != 3:
+			return JsonResponse({"status":400,"error":"date not well-formed"})
+		orderdata = Order.objects.filter(user = userdata).filter(date__contains = datetime.date(dates[0],dates[1],dates[2]))
+		if not orderdata:
+			return JsonResponse({"status":200,"data":[]})
+		data = []
+		for o in orderdata:
+			data.append({
+				"date":o.date,
+				"orderno":o.orderno,
+				"stockno":o.stockno,
+				"stockname":o.stockinf.stockname,
+				"amount":o.amount,
+				"orderType":o.orderType,
+				"price":o.price,
+				"tradeCategory":o.tradeCategory,
+				"tradeType":o.tradeType,
+				"takeprice":o.takeprice,
+				"state":o.state,
+				"pendingType":o.pendingType
+			})
+		return JsonResponse({"status":200,"data":data})
+	if (not orderno) and (not requestDate) and (startDate) and (endDate):
+		if (len(startDate.split("-")) != 3) or (len(endDate.split("-")) != 3):
+			return JsonResponse({"status":400,"error":"date not well-formed"})
+		st =  datetime.datetime.strptime(startDate,"%Y-%m-%d")
+		lt = datetime.datetime.fromtimestamp(datetime.datetime.strptime(endDate,"%Y-%m-%d").timestamp() + (60 * 60 * 24))
+		orderdata = Order.objects.filter(user = userdata).filter(date__gt = st).filter(date__lt = lt)
+		if not orderdata:
+			return JsonResponse({"status":200,"data":[]})
+		data = []
+		for o in orderdata:
+			data.append({
+				"date":o.date,
+				"orderno":o.orderno,
+				"stockno":o.stockno,
+				"stockname":o.stockinf.stockname,
+				"amount":o.amount,
+				"orderType":o.orderType,
+				"price":o.price,
+				"tradeCategory":o.tradeCategory,
+				"tradeType":o.tradeType,
+				"takeprice":o.takeprice,
+				"state":o.state,
+				"pendingType":o.pendingType
+			})
+		return JsonResponse({"status":200,"data":data})
