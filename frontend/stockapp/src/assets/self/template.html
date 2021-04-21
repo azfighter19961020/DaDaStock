@@ -207,8 +207,11 @@
                         <th scope="col">股票名稱</th>
                         <th scope="col">成交股數</th>
                         <th scope="col">成交價格</th>
+                        <th scope="col">委託狀態</th>
                         <th scope="col">委賣/委買</th>
                         <th scope="col">掛單</th>
+                        <th scope="col">交易種類</th>
+                        <th scope="col">交易類型</th>
                         <th scope="col">取消</th>
                     </tr>
                 </thead>
@@ -219,9 +222,12 @@
                         <td>{{data.stockno}}</td>
                         <td>{{data.stockname}}</td>
                         <td>{{data.amount}}</td>
-                        <td>{{data.price}}</td>
+                        <td>{{(data.price).toFixed(2)}}</td>
                         <td>{{data.state}}</td>
+                        <td>{{data.orderType}}</td>
                         <td>{{data.pendingType}}</td>
+                        <th>{{data.tradeCategory}}</th>
+                        <th>{{data.tradeType}}</th>
                         <td><button class="btn btn-outline-danger" @click="cancelOrderFunc(data.orderno)">取消委託</button></td>
                     </tr>
                 </tbody>

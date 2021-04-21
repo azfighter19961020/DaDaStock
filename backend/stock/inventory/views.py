@@ -40,7 +40,7 @@ def inventoryView(request):
 		returndata.append({
 			"stockno":inventoryRecord.stockno,
 			"stockname":stockinfdata[0].stockname,
-			"nowPrice":nowPrice,
+			"nowPrice":nowPrice / inventoryRecord.amount,
 			"unRealize":unRealize,
 			"amount":inventoryRecord.amount,
 			"price":inventoryRecord.price,
@@ -79,7 +79,7 @@ def inventoryAPIView(request):
 			"stockno":inventoryRecord.stockno,
 			"stockname":stockinfdata[0].stockname,
 			"amount":inventoryRecord.amount,
-			"nowPrice":nowPrice,
+			"nowPrice":nowPrice / inventoryRecord.amount,
 			"unRealize":unRealize,
 			"price":inventoryRecord.price
 		})

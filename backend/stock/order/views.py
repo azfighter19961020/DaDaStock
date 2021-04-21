@@ -38,6 +38,7 @@ def order(request,orderno = None):
 		for order in userorder:
 			print(order.date)
 			data.append({
+				'date':order.date,
 				'orderno':order.orderno,
 				'stockno':order.stockno,
 				'stockname':order.stockinf.stockname,
@@ -46,6 +47,8 @@ def order(request,orderno = None):
 				'orderType':order.orderType,
 				'price':order.price,
 				'state':order.state,
+				'tradeType':order.tradeType,
+				'tradeCategory':order.tradeCategory,
 				'pendingType':order.pendingType,
 				'date':order.date,
 			})
@@ -64,6 +67,7 @@ def order(request,orderno = None):
 			return JsonResponse({'status':400,'error':"order not found"})
 		orderdata = orderdata[0]
 		data = [{
+			'date':orderdata.date,
 			'orderno':orderdata.orderno,
 			'stockno':orderdata.stockno,
 			'stockname':orderdata.stockinf.stockname,
@@ -101,6 +105,7 @@ def order(request,orderno = None):
 				return JsonResponse({'status':400,'message':'order not found'})
 			orderdata = orderdata[0]
 			data = {
+				'date':orderdata.date,
 				'orderno':orderdata.orderno,
 				'stockno':orderdata.stockno,
 				'stockname':orderdata.stockinf.stockname,
@@ -214,15 +219,26 @@ def order(request,orderno = None):
 				數量合理性
 				如果tradeType 是Common 或者是Fixing
 				股數應大於1000
+				如果tradeType 是Common 或者是Fixing
+				股數需整除1000
 				如果tradeType是Odd 或者是IntradayOdd
 				股數應在1~999
 			"""
 			if jsondata["tradeType"] == "Fixing" or jsondata["tradeType"] == "Common":
 				if int(jsondata["amount"]) < 1000:
 					return JsonResponse({"status":704,"error":"數量參數錯誤! 應為1000以上"})
+				if int(jsondata["amount"]) % 1000 != 0:
+					return JsonResponse({"status":704,"error":"數量參數錯誤! 選擇整股數量應能整除1000"})
 			if jsondata["tradeType"] == "Odd" or jsondata["tradeType"] == "IntradayOdd":
 				if int(jsondata["amount"]) >= 1000:
 					return JsonResponse({"status":704,"error":"數量參數錯誤!應為1000以下"})
+
+			"""
+				數量合理性
+				不合理數量
+			"""
+			if int(jsondata["amount"]) < 1:
+				return JsonResponse({"status":704,"error":"數量錯誤! 不小於1"})
 
 			orderno = str(uuid.uuid4()).split("-")[0]
 
@@ -258,6 +274,7 @@ def order(request,orderno = None):
 			)
 			order.save()	
 			data = {
+				"date":datetime.datetime.now().astimezone(timezone("Asia/Taipei")),
 				"orderno":orderno,
 				"stockno":jsondata["stockno"],
 				"stockname":stockinfdata.stockname,
@@ -304,9 +321,38 @@ def order(request,orderno = None):
 			modifyType = jsondata["modifyType"]
 			if "modifyValue" not in jsondata:
 				return JsonResponse({"status":400,"message":"缺少改變值!"})
+			if jsondata["modifyType"] == "price":
+				price = float(jsondata["modifyValue"])
+				if price <= 0:
+					return JsonResponse({"status":704,"message":"價格參數錯誤! 不應小於零"})
+				stockdata = Stock.objects.raw('SELECT * FROM stock WHERE stockid=%s ORDER BY ABS(DATEDIFF(date,NOW())) LIMIT 1;'%orderdata.stockno)
+				nearTodayData = stockdata[0]
+				closeprice = nearTodayData.closeprice		
+				limitDown = round(closeprice * 0.9,2)
+				limitUp = round(closeprice * 1.1,2)
+				print(limitDown)
+				print(limitUp)
+				if (price < (limitDown - 1)) or (price > (limitUp + 1)):
+					return JsonResponse({"status":704,"message":"價格參數錯誤! 不應超過正負10%"})
+			if jsondata["modifyType"] == "amount":
+				tradeType = orderdata.tradeType
+				if int(jsondata["modifyValue"]) <= 0:
+					return JsonResponse({"status":704,"message":"數量參數錯誤! 不應小於零"})
+				if (tradeType == "Common") or (tradeType == "Fixing"):
+					amount = int(jsondata["modifyValue"])
+					if amount % 1000 != 0:
+						return JsonResponse({"status":704,"message":"數量參數錯誤! 委託為整股，數量應整除1000"})
+					if amount < 1000:
+						return JsonResponse({"status":704,"message":"數量參數錯誤! 委託為整股， 數量應大於1000"})
+				if (tradeType == "IntradayOdd") or (tradeType == "Odd"):
+					if amount > 999:
+						return JsonResponse({"status":704,"message":"數量參數錯誤! 委託為零股，數量應在0~999之間"})
+
+
 			exec("orderdata.%s = %s"%(jsondata["modifyType"],jsondata["modifyValue"]))
 		orderdata.save()
 		data = {
+			'date':orderdata.date,
 			"orderno":orderdata.orderno,
 			"stockno":orderdata.stockno,
 			"stockname":orderdata.stockinf.stockname,

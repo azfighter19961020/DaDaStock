@@ -52,9 +52,19 @@
               this.LimitUp = this.closepriceNear * 1.1
               this.Unchanged = this.closepriceNear
               this.stockname = response.data.stockname
-              //let price = document.getElementById("price")
-              //price.value = (this.closepriceNear).toFixed(2)
+              let price = document.getElementById("price")
+              price.value = (this.closepriceNear).toFixed(2)
               this.userprice = (this.closepriceNear).toFixed(2)
+              this.takeprice = "Current"
+              var elements = document.getElementsByClassName("takePriceButton")
+              for(var i=0;i<elements.length;i++){
+                if(elements[i].id == "Current"){
+                  elements[i].className = "btn btn-primary takePriceButton"
+                }
+                else{
+                  elements[i].className = "btn btn-outline-primary takePriceButton"
+                }
+              }
             }
             else{
               alert(response.data.error)
@@ -82,9 +92,19 @@
               this.LimitUp = (this.closepriceNear * 1.1).toFixed(2)
               this.Unchanged = this.closepriceNear
               this.stockname = response.data.stockname
-              //let price = document.getElementById("price")
-              //price.value = (this.closepriceNear).toFixed(2)
+              let price = document.getElementById("price")
+              price.value = (this.closepriceNear).toFixed(2)
               this.userprice = (this.closepriceNear).toFixed(2)
+              this.takeprice = "Current"
+              var elements = document.getElementsByClassName("takePriceButton")
+              for(var i=0;i<elements.length;i++){
+                if(elements[i].id == "Current"){
+                  elements[i].className = "btn btn-primary takePriceButton"
+                }
+                else{
+                  elements[i].className = "btn btn-outline-primary takePriceButton"
+                }
+              }
               this.isLoading = false
             }
             else{
@@ -205,6 +225,16 @@
         let tradeCategory = this.tradeCategory
         let orderType = this.orderType
         let amount = document.getElementById("amount").value
+        if(parseInt(amount) < 1){
+          alert("數量請勿小於1!")
+          return
+        }
+        if(this.tradeType == "Common" || this.tradeType == "Fixing"){
+          if(parseInt(amount) % 1000 != 0){
+            alert("選取整股，但數量不為1000的倍數!")
+            return
+          }
+        }
         let price = this.userprice
         if(price > parseFloat(this.LimitUp) || price < parseFloat(this.LimitDown)){
           this.priceErrorMsg = "取價錯誤，漲跌幅不可超過±10%"
@@ -405,6 +435,9 @@
         for(var i=0;i<elements.length;i++){
           if(elements[i].id == param){
             this.userprice = eval(`(this.${elements[i].id})`)
+            if(param == "Current"){
+              this.userprice = this.closepriceNear
+            }
             elements[i].className = "btn btn-primary takePriceButton"
           }
           else{
