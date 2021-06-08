@@ -3,6 +3,7 @@
 <script>
   import {candleOption,splitData,calculateMA} from '@/charts/candleStick.js'
   import {randomStock,TSEapi} from '@/apis/stock.js'
+  import {host,port} from '@/apis/constant.js'
   import {LetterCube} from 'vue-loading-spinner'
   export default({
     name:'index',
@@ -46,6 +47,8 @@
         // 数据意义：开盘(open)，收盘(close)，最低(lowest)，最高(highest)
         let [randomResponse,TSEapiResponse] = await Promise.all([randomStock(),TSEapi()])
         this.data0 = splitData(randomResponse.data.data)
+        console.log("data0:")
+        console.log(this.data0)
         let stockinf = randomResponse.data.inf
         this.KChart.setOption(candleOption(stockinf.stockid,calculateMA,this.data0))
         let informationArea = document.getElementById("stockInformation")
@@ -54,7 +57,7 @@
               HotStock: ${stockinf.stockname}
           </h2>
           ${stockinf.companyInf}
-          <img src="http://3.21.154.195:81/media/${stockinf.logo}" alt="" style="height:30%">
+          <img src="http://${host()}:${port()}/media/${stockinf.logo}" alt="" style="height:30%">
         `
         this.randomStockNo = stockinf.stockid
         let tsedata = TSEapiResponse.data.data

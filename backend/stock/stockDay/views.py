@@ -12,7 +12,7 @@ from tools.method_check import methodCheck
 def stock(requests,stockno = None,startDate = None,endDate = None,requestType = None):
 	if not stockno:
 		rstockid = choice(Stock.objects.values_list('stockid',flat=True))
-		stockdata = Stockday.objects.filter(stockid = rstockid)
+		stockdata = Stockday.objects.filter(stockid = rstockid).distinct()
 		data = []
 		for s in stockdata:
 			data.append([
@@ -34,7 +34,7 @@ def stock(requests,stockno = None,startDate = None,endDate = None,requestType = 
 		}
 		return JsonResponse({"status":200,"data":data,"inf":inf})
 	elif stockno and (not startDate) and (not endDate) and (not requestType):
-		stockdata = Stockday.objects.filter(stockid = stockno)
+		stockdata = Stockday.objects.filter(stockid = stockno).distinct()
 		if not stockdata:
 			return JsonResponse({"status":400,"error":"stock data not found"})
 		data = []

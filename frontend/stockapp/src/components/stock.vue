@@ -35,7 +35,7 @@
           if(!stockno){return}
           window.location.href = `/stockapp/#/stock/${stockno}`
           window.location.reload()
-        }
+        },
       },
       mounted(){
         this.isLoading = true
@@ -73,7 +73,7 @@
               let html = `
                 <div><h1>Oops! ...查無股票資料</h1></div>
                 <div><h2>目前這支股票沒有相關資料喔</h2></div>
-                <div><a href="/">點我回首頁</a></div>
+                <div><button class="btn btn-primary" onclick="window.location.href='/stockapp/#/';window.location.reload()">點我回首頁</button></div>
               `
               let element = document.getElementById('app')
               element.innerHTML = html

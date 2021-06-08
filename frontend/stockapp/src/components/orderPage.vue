@@ -48,8 +48,10 @@
           (response) => {
             if(response.data.status == 200){
               this.closepriceNear = response.data.data.closeprice
-              this.LimitDown = this.closepriceNear * 0.9
-              this.LimitUp = this.closepriceNear * 1.1
+              // this.LimitDown = this.closepriceNear * 0.9
+              // this.LimitUp = this.closepriceNear * 1.1
+              this.LimitDown = (response.data.data.limitDown).toFixed(2)
+              this.LimitUp = (response.data.data.limitUp).toFixed(2)
               this.Unchanged = this.closepriceNear
               this.stockname = response.data.stockname
               let price = document.getElementById("price")
@@ -88,8 +90,10 @@
             if(response.data.status == 200){
               this.stockno = response.data.stockno
               this.closepriceNear = response.data.data.closeprice
-              this.LimitDown = (this.closepriceNear * 0.9).toFixed(2)
-              this.LimitUp = (this.closepriceNear * 1.1).toFixed(2)
+              // this.LimitDown = (this.closepriceNear * 0.9).toFixed(2)
+              // this.LimitUp = (this.closepriceNear * 1.1).toFixed(2)
+              this.LimitDown = (response.data.data.limitDown).toFixed(2)
+              this.LimitUp = (response.data.data.limitUp).toFixed(2)
               this.Unchanged = this.closepriceNear
               this.stockname = response.data.stockname
               let price = document.getElementById("price")
@@ -175,7 +179,7 @@
     methods:{
       detectTime(){
         let hour = new Date(Date.now()).getHours()
-        if(hour >= 13){
+        if(hour >= 13 & hour < 18){
           this.overtime = true
           this.overtimeMsg = "已經超過交易時間，將只能選擇ROD，並且不可選擇現價"
           let takeprices = document.getElementsByClassName("takePriceButton")

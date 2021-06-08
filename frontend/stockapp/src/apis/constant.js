@@ -1,7 +1,7 @@
 export function host(){
-  return "3.21.154.195"
+  return "show.tedu.tw"
 }
 
 export function port(){
-  return "81"
+  return "8098"
 }

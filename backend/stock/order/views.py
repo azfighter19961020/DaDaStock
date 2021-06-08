@@ -13,6 +13,18 @@ import datetime
 from tools.method_check import methodCheck
 import math
 from pytz import timezone
+from tools.stock_data import stockDataHelper
+
+
+def returnNearTodayData(stockno,helper):
+	# stockdata = Stock.objects.raw('SELECT * FROM stock WHERE stockid=%s ORDER BY ABS(DATEDIFF(date,"%s")) LIMIT 1;'%(stockno,str(helper.specifyToAsia())))
+	stockdata = Stock.objects.raw('select * from stock where stock.date<="%s" and stockid=%s order by stock.date DESC limit 1;'%(helper.getNowByAsia(),stockno))
+	return stockdata
+
+
+def returnNearData(stockno):
+	stockdata = Stock.objects.raw('SELECT * FROM stock where stockid=%s ORDER BY date DESC LIMIT 1'%stockno)
+	return stockdata
 
 # Create your views here.
 @logincheck("GET")
@@ -23,6 +35,7 @@ def order(request,orderno = None):
 	 post: 下單
 	 + orderno : 獲取單一委託資訊
 	'''
+	helper = stockDataHelper()
 	if request.method == "GET" and not orderno:
 		data = request.GET
 		print(data)
@@ -170,18 +183,27 @@ def order(request,orderno = None):
 				判斷價格合理性 -- FOR API
 				如價格漲跌幅超過10% 則為錯誤
 			"""
-			stockdata = Stock.objects.raw('SELECT * FROM stock WHERE stockid=%s ORDER BY ABS(DATEDIFF(date,NOW())) LIMIT 1;'%jsondata["stockno"])
+			stockdata = returnNearTodayData(jsondata["stockno"],helper)
+			nearestData = returnNearData(jsondata["stockno"])
+			nearestData = nearestData[0]
 			nearTodayData = stockdata[0]
 			closeprice = nearTodayData.closeprice
+			print("closeprice:",closeprice)
+			nearcloseprice = nearestData.closeprice
 			limitDown = round(closeprice * 0.9,2)
 			limitUp = round(closeprice * 1.1,2)
+			print("limitDown:",limitDown)
+			print("limitUP:",limitUp)
+			# limitDown = round(closeprice * 0.95,2)
+			# limitUp = round(closeprice * 1.05,2)
 			userprice = jsondata["price"]
-			if (float(userprice) > limitUp + 1) or (float(userprice) < limitDown - 1):
+			if (float(userprice) > limitUp) or (float(userprice) < limitDown):
 				return JsonResponse({"status":704,"error":"價格錯誤! 價格應不超過漲跌幅10%"})
 
-			hour = (datetime.datetime.now().astimezone(timezone("Asia/Taipei")).hour >= 13) or (datetime.datetime.now().astimezone(timezone("Asia/Taipei")).hour < 9)
-			print(datetime.datetime.now().astimezone(timezone("Asia/Taipei")).hour)
-			print("hour is:",hour)
+			# hour = (datetime.datetime.now().astimezone(helper.AsiaTimeZone).hour >= 13) or (datetime.datetime.now().astimezone(helper.AsiaTimeZone).hour < 9)
+			# print(datetime.datetime.now().astimezone(timezone("Asia/Taipei")).hour)
+			# print("hour is:",hour)
+			hour = helper.isTrade()
 
 			"""
 				判斷參數合理性 -- FOR API
@@ -197,7 +219,7 @@ def order(request,orderno = None):
 				jsondata["tradeType"] == "IntradayOdd":
 				if (jsondata["takeprice"] != "Unchanged"):
 					if not hour:
-						return JsonResponse({"status":704,"error":"取價參數錯誤!參數應為Unchanged,傳入參數為{}".format(jsondata["takeprice"])})
+						return JsonResponse({"status":704,"error":"取價參數錯誤!參數應為Current,傳入參數為{}".format(jsondata["takeprice"])})
 				if jsondata["tradeCategory"] != "Cash":
 					return JsonResponse({"status":704,"error":"交易種類錯誤!參數應為Cash,傳入參數為{}".format(jsondata["tradeCategory"])})
 				if jsondata["pendingType"] != "ROD":
@@ -248,19 +270,20 @@ def order(request,orderno = None):
 			elif jsondata["takeprice"] == "LimitUp":
 				userprice = limitUp
 			elif jsondata["takeprice"] == "Unchanged":
-				userprice = closeprice
+				userprice = nearcloseprice
 			"""
 				order : 初始狀態都為預約委託狀態
 				另創API 每10分鐘call一次
 				根據價格決定是否交易成功
 				過10:00PM尚未成交交易一律取消委託
 			"""
-			print(datetime.datetime.now().astimezone(timezone("Asia/Taipei")))
+			# print(datetime.datetime.now())
+			pendingType = jsondata["pendingType"]
 			state = "預約委託"
 			order = Order.objects.create(
 				orderno = orderno,
 				stockno = jsondata["stockno"],
-				date = datetime.datetime.now().astimezone(timezone("Asia/Taipei")),
+				date = helper.timezoneTransformer(datetime.datetime.now(),"Asia"),
 				stockinf = stockinfdata,
 				user = userdata,
 				amount = int(jsondata["amount"]),
@@ -272,9 +295,72 @@ def order(request,orderno = None):
 				pendingType = jsondata["pendingType"],
 				state = state,
 			)
-			order.save()	
+			order.save()
+			if pendingType == "IOC" or pendingType == "FOK":
+				# lowprice = nearTodayData.lowprice
+				# closeprice = nearTodayData.closeprice
+				lowprice = nearestData.lowprice
+				closeprice = nearestData.closeprice
+				print(lowprice)
+				highprice = nearTodayData.highprice
+				if order.orderType.lower() == "buy":
+					# if (order.price >= lowprice) or (order.takeprice == "LimitDown"):
+					if closeprice <= order.price <= limitUp:
+						amount = order.amount
+						price = order.price
+						userdata = order.user
+						inventoryData = Inventory.objects.filter(user = userdata).filter(stockno = jsondata["stockno"])
+						if not inventoryData:
+							inventory = Inventory.objects.create(
+								amount = amount,
+								price = price,
+								user = order.user,
+								stockno = jsondata["stockno"],
+								tradeType = "Buy"
+							)
+							inventory.save()
+						else:
+							inventoryData = inventoryData[0]
+							inventoryData.amount = inventoryData.amount + amount
+							inventoryData.price = (inventoryData.price + price) / 2
+							inventoryData.save()
+						
+						# 交易手續費
+						# 買入: 0.1425%
+						# 賣出: 0.1425% + 0.30%
+						tempbalance = (amount * price) * (1 + (0.1425 / 100))
+						print(tempbalance)
+						userdata.balance  = userdata.balance - tempbalance
+						userdata.save()
+						order.state = "交易成功"
+						state = "交易成功"
+						order.save()
+
+				elif order.orderType.lower() == "sell":
+					# closeprice = nearTodayData.closeprice
+					if limitDown <= order.price <= closeprice:
+						amount = order.amount
+						price = order.price
+						inventoryData = Inventory.objects.filter(user = order.user).filter(stockno = jsondata["stockno"])
+						inventoryData = inventoryData[0]
+						if inventoryData.amount == amount:
+							inventoryData.delete()
+						else:
+							inventoryData.amount = inventoryData.amount - amount
+							inventoryData.save()
+						userdata = order.user
+						userdata.balance = userdata.balance + (amount * price) * (1 - ((0.1425 + 0.3) / 100))
+						userdata.save()
+						userdata.save()
+						order.state = "交易成功"
+						state = "交易成功"
+						order.save()
+				if order.state != "交易成功":
+					state = "交易取消"
+					order.state = "交易取消"
+					order.save()	
 			data = {
-				"date":datetime.datetime.now().astimezone(timezone("Asia/Taipei")),
+				"date":helper.timezoneTransformer(datetime.datetime.now(),"Asia"),
 				"orderno":orderno,
 				"stockno":jsondata["stockno"],
 				"stockname":stockinfdata.stockname,
@@ -325,14 +411,17 @@ def order(request,orderno = None):
 				price = float(jsondata["modifyValue"])
 				if price <= 0:
 					return JsonResponse({"status":704,"message":"價格參數錯誤! 不應小於零"})
-				stockdata = Stock.objects.raw('SELECT * FROM stock WHERE stockid=%s ORDER BY ABS(DATEDIFF(date,NOW())) LIMIT 1;'%orderdata.stockno)
+				# stockdata = Stock.objects.raw('SELECT * FROM stock WHERE stockid=%s ORDER BY ABS(DATEDIFF(date,"%s")) LIMIT 1;'%(orderdata.stockno,str(helper.specifyToAsia())))
+				stockdata = returnNearTodayData(jsondata["stockno"],helper)
 				nearTodayData = stockdata[0]
-				closeprice = nearTodayData.closeprice		
+				closeprice = nearTodayData.closeprice	
+				# limitDown = round(closeprice * 0.95,2)
+				# limitUp = round(closeprice * 1.15,2)
 				limitDown = round(closeprice * 0.9,2)
 				limitUp = round(closeprice * 1.1,2)
 				print(limitDown)
 				print(limitUp)
-				if (price < (limitDown - 1)) or (price > (limitUp + 1)):
+				if (price < limitDown) or (price > limitUp):
 					return JsonResponse({"status":704,"message":"價格參數錯誤! 不應超過正負10%"})
 			if jsondata["modifyType"] == "amount":
 				tradeType = orderdata.tradeType
@@ -352,7 +441,7 @@ def order(request,orderno = None):
 			exec("orderdata.%s = %s"%(jsondata["modifyType"],jsondata["modifyValue"]))
 		orderdata.save()
 		data = {
-			'date':orderdata.date,
+			'date':helper.timezoneTransformer(orderdata.date,"Asia"),
 			"orderno":orderdata.orderno,
 			"stockno":orderdata.stockno,
 			"stockname":orderdata.stockinf.stockname,
@@ -375,7 +464,7 @@ def scanOrder(request):
 	print(data)
 	jsondata = json.loads(data)
 	if jsondata["user"] != "charlieda" or \
-			jsondata["token"] != "":
+			jsondata["token"] != "b6a7103c-9ba5-4199-90fb-8fc93eeb5311":
 		return JsonResponse({"status":400,"error":"not super user"})
 	orderdata = Order.objects.all()
 	isClose = datetime.datetime.now().astimezone(timezone("Asia/Taipei")).strftime('%H:%m') == "22:00" 
@@ -384,18 +473,29 @@ def scanOrder(request):
 			if order.state == "預約委託":
 				order.state = "委託取消(過日)"
 		return JsonResponse({'status':200,'message':"22:00委託換日掃描成功","isClose":True})
+
 	for order in orderdata:
 		if order.state == "預約委託":
 			stockno = order.stockno
-			stockdata = Stock.objects.raw('SELECT * FROM stock WHERE stockid=%s ORDER BY ABS(DATEDIFF(date,NOW())) LIMIT 1;'%order.stockno)
+			# stockdata = Stock.objects.raw('SELECT * FROM stock WHERE stockid=%s ORDER BY ABS(DATEDIFF(date,"%s")) LIMIT 1;'%(order.stockno,str(helper.specifyToAsia())))
+			stockdata = returnNearTodayData(stockno,helper)
 			if not stockdata:
 				continue
 			nearTodayData = stockdata[0]
-			lowprice = nearTodayData.lowprice
+			closeprice = nearTodayData.closeprice
+			limitDown = round(closeprice * 0.9,2)
+			limitUp = round(closeprice * 1.1,2)
+			nearestData = returnNearData(stockno)
+			nearestData = nearestData[0]
+			# lowprice = nearTodayData.lowprice
+			lowprice = nearestData.lowprice
 			print(lowprice)
-			highprice = nearTodayData.highprice
+			# highprice = nearTodayData.highprice
+			highprice = nearestData.highprice
+			nearcloseprice = nearestData.closeprice
 			if order.orderType.lower() == "buy":
-				if (order.price >= lowprice) or (order.takeprice == "LimitDown"):
+				# if (order.price >= lowprice) or (order.takeprice == "LimitDown"):
+				if nearcloseprice <= order.price <= limitUp:
 					amount = order.amount
 					price = order.price
 					userdata = order.user
@@ -425,7 +525,8 @@ def scanOrder(request):
 					order.state = "交易成功"
 					order.save()
 			elif order.orderType.lower() == "sell":
-				if order.price <= highprice:
+				# if order.price <= highprice:
+				if limitDown <= order.price <= nearcloseprice:
 					amount = order.amount
 					price = order.price
 					inventoryData = Inventory.objects.filter(user = order.user).filter(stockno = stockno)

@@ -33,7 +33,7 @@ def login(request,method = None):
 			print("into if")
 			return JsonResponse({'status':400,'error':"password incorrect"})
 		else:
-			usertoken = token(userdata.username).decode()
+			usertoken = token(userdata.username)
 			data = {
 				'username':username,
 				'token':usertoken
