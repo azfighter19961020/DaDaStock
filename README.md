@@ -28,5 +28,5 @@
 
 <p>使用npm run serve運行</p>
 
-<a href="http://crystaltechzone.in:8097/stockapp/#">點我前往範例</a>
+<a href="http://34.67.216.186:8097/stockapp/#">點我前往範例</a>
 
